@@ -13,7 +13,7 @@ services:
       - airflow_compose_postgres_data:/var/lib/postgresql/data
 
   airflow:
-    image: docker.io/apache/airflow:latest
+    build: .
     container_name: airflow_webserver
     restart: always
     environment:
@@ -29,7 +29,7 @@ services:
       AIRFLOW__WEBSERVER__PROXY_FIX_X_FOR: 1
       AIRFLOW__WEBSERVER__PROXY_FIX_X_HOST: 1
       AIRFLOW__WEBSERVER__PROXY_FIX_X_PREFIX: 1
-      _PIP_ADDITIONAL_REQUIREMENTS: "duckdb dbt-core dbt-duckdb python-dotenv pandas pyarrow deepdiff delta-spark pyspark deltalake great-expectations==0.15.13 streamlit"
+
     ports:
       - "8083:8080"
       - "8085:8085"
