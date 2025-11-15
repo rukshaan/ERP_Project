@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: docker.io/postgres:13
+    container_name: airflow_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_compose_postgres_data:/var/lib/postgresql/data
+
+  airflow:
+    image: docker.io/apache/airflow:latest
+    container_name: airflow_webserver
+    restart: always
+    environment:
+      AIRFLOW_HOME: /opt/airflow
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__WEBSERVER__USER: airflow # Custom username
+      AIRFLOW__WEBSERVER__PASSWORD: airflow # Custom password
+
+      AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: True
+      AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+
+      AIRFLOW__WEBSERVER__PROXY_FIX_X_FOR: 1
+      AIRFLOW__WEBSERVER__PROXY_FIX_X_HOST: 1
+      AIRFLOW__WEBSERVER__PROXY_FIX_X_PREFIX: 1
+      _PIP_ADDITIONAL_REQUIREMENTS: "duckdb dbt-core dbt-duckdb python-dotenv pandas pyarrow deepdiff delta-spark pyspark deltalake great-expectations==0.15.13 streamlit"
+    ports:
+      - "8083:8080"
+      - "8085:8085"
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./plugins:/opt/airflow/plugins
+      - ./logs:/opt/airflow/logs
+      - ./Data:/opt/airflow/data
+
+    depends_on:
+      - postgres
+    command: ["airflow", "standalone"]
+
+  pgadmin:
+    image: docker.io/dpage/pgadmin4
+    container_name: airflow_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  airflow_compose_postgres_data:
+  airflow_compose_airflow_data:
+  pgadmin_data:
