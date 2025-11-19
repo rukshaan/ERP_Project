@@ -51,7 +51,7 @@ def say_hello(**kwargs):
     if not details_of_sales_order:
         raise Exception("No data found in results")
 
-    print("Fetched details for sales orders:", details_of_sales_order)
+    # print("Fetched details for sales orders:", details_of_sales_order)
 
     # -------------------------------------
     # 4. Save JSON to Bronze/Volumes/YYYY/MM/DD
@@ -60,10 +60,10 @@ def say_hello(**kwargs):
     date_part = exec_date.strftime("%Y/%m/%d")
 
     base_dir = "/opt/airflow/data/Bronze/Volumes"
-    output_dir = os.path.join(base_dir, date_part)
-    os.makedirs(output_dir, exist_ok=True)
+    # output_dir = os.path.join(base_dir, date_part)
+    os.makedirs(base_dir, exist_ok=True)
 
-    output_path = os.path.join(output_dir, f"{run_id}_{doctype}.json")
+    output_path = os.path.join(base_dir, f"{doctype}.json")
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(details_of_sales_order, f, ensure_ascii=False, indent=2, default=str)
