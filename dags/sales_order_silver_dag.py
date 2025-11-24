@@ -6,7 +6,7 @@ from airflow import DAG
 import requests
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
-from tasks.task1 import say_hello
+from tasks.task1 import get_sales_data_bronze_dag
 from tasks.transform_salesorder_to_silver import transform_salesorder_to_silver
 
 

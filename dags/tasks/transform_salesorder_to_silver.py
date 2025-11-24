@@ -80,27 +80,27 @@ def transform_salesorder_to_silver(**kwargs):
     # -------------------------------------
     # 5. SILVER HEADER TABLE
     # -------------------------------------
-    silver_header_df = expanded_df.select(
-        F.col("so.name").alias("sales_order_id"),
-        F.col("so.customer").alias("customer"),
-        F.col("so.transaction_date").alias("order_date"),
-        F.col("so.delivery_date").alias("delivery_date"),
-        F.col("so.status").alias("status"),
-        F.col("so.company").alias("company"),
-        F.col("so.grand_total").alias("grand_total"),
-        F.col("so.currency").alias("currency"),
-        "batchid", "creationdate", "md5"
-    )
+    # silver_header_df = expanded_df.select(
+    #     F.col("so.name").alias("sales_order_id"),
+    #     F.col("so.customer").alias("customer"),
+    #     F.col("so.transaction_date").alias("order_date"),
+    #     F.col("so.delivery_date").alias("delivery_date"),
+    #     F.col("so.status").alias("status"),
+    #     F.col("so.company").alias("company"),
+    #     F.col("so.grand_total").alias("grand_total"),
+    #     F.col("so.currency").alias("currency"),
+    #     "batchid", "creationdate", "md5"
+    # )
 
-    (
-        silver_header_df
-        .write.format("delta")
-        .mode("overwrite")
-        .option("overwriteSchema", "true")
-        .save(silver_header_path)
-    )
+    # (
+    #     silver_header_df
+    #     .write.format("delta")
+    #     .mode("overwrite")
+    #     .option("overwriteSchema", "true")
+    #     .save(silver_header_path)
+    # )
 
-    print(f"Silver SalesOrderHeader written → {silver_header_path}")
+    # print(f"Silver SalesOrderHeader written → {silver_header_path}")
 
     # -------------------------------------
     # 6. SILVER ITEMS TABLE (one row per item)

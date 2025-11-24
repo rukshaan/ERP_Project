@@ -13,7 +13,7 @@ import datetime
 import pyspark.sql.functions as F
 
 
-def say_hello(**kwargs):
+def get_sales_data_bronze_dag(**kwargs):
 
     # -------------------------------------
     # 1. Configure Spark Session

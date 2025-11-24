@@ -6,8 +6,8 @@ from airflow import DAG
 import requests
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
-
-from tasks.task1 import say_hello
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from tasks.task1 import get_sales_data_bronze_dag
 from tasks.task2 import say_hello_2
 
 import json
@@ -36,11 +36,17 @@ with DAG(
 # check schema
     task_1 = PythonOperator(
         task_id='task_1',
-        python_callable=say_hello,
+        python_callable=get_sales_data_bronze_dag,
         
         dag=dag,
     )
 
+    trigger_second_dag = TriggerDagRunOperator(
+        task_id='trigger_second_dag',
+        trigger_dag_id='sales_order_bronze_silver',
+        
+        reset_dag_run=True
+    )
     # task_2 = PythonOperator(
     #     task_id='task_2',
     #     python_callable=say_hello_2,
@@ -49,7 +55,7 @@ with DAG(
  
 
  
-    # task_2 >> task_1
+    task_1 >> trigger_second_dag
  
  
  
