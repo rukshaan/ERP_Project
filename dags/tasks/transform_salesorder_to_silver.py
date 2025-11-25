@@ -8,7 +8,7 @@ from pyspark.sql.types import (
 )
 
 def transform_salesorder_to_silver(**kwargs):
-    print(">>>> Silver task has started <<<<")
+    
 
     # -------------------------------------
     # 1. Spark Session With Delta
@@ -54,13 +54,21 @@ def transform_salesorder_to_silver(**kwargs):
             StructField("grand_total", DoubleType(), True),
             StructField("currency", StringType(), True),
 
+             # Required ERPNext additional fields
+            StructField("per_delivered", DoubleType(), True),
+            StructField("per_billed", DoubleType(), True),
+            StructField("modified", StringType(), True),
+
             StructField("items", ArrayType(
                 StructType([
+                    StructField("name", StringType(), True),           # Line ID
                     StructField("item_code", StringType(), True),
                     StructField("item_name", StringType(), True),
                     StructField("qty", DoubleType(), True),
+                    StructField("delivered_qty", DoubleType(), True),
                     StructField("rate", DoubleType(), True),
                     StructField("amount", DoubleType(), True),
+                    StructField("warehouse", StringType(), True),
                 ])
             ), True),
         ])
@@ -114,12 +122,31 @@ def transform_salesorder_to_silver(**kwargs):
         )
         .select(
             "sales_order_id",
+            F.col("item.name").alias("item_id"),
             F.col("item.item_code").alias("item_code"),
             F.col("item.item_name").alias("item_name"),
-            F.col("item.qty").alias("item_quantity"),
-            F.col("item.rate").alias("item_rate"),
-            F.col("item.amount").alias("item_amount"),
-            "batchid", "creationdate", "md5"
+            F.col("item.qty").alias("qty"),
+            F.col("item.delivered_qty").alias("delivered_qty"),
+            F.col("item.rate").alias("rate"),
+            F.col("item.amount").alias("amount"),
+            F.col("item.warehouse").alias("warehouse"),
+
+            # ---------------------------------------------------------
+            #  DERIVED FIELDS (CALCULATED IN SILVER)
+            # ---------------------------------------------------------
+            (F.col("item.qty") - F.col("item.delivered_qty")).alias("open_qty"),
+
+            ((F.col("item.qty") - F.col("item.delivered_qty")) * F.col("item.rate"))
+                .alias("open_amount"),
+
+            F.when(
+                (F.col("item.qty") - F.col("item.delivered_qty")) == 0,
+                "Yes"
+            ).otherwise("No").alias("is_fully_delivered"),
+
+            "batchid",
+            "creationdate",
+            "md5"
         )
     )
 

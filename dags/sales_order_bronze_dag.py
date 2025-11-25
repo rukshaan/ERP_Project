@@ -47,10 +47,20 @@ with DAG(
         
         reset_dag_run=True
     )
-    # task_2 = PythonOperator(
-    #     task_id='task_2',
-    #     python_callable=say_hello_2,
+    
+    # # Add this task to your sales_order_bronze_silver DAG
+    # trigger_third_dag = TriggerDagRunOperator(
+    #     task_id='trigger_dbt_transformation_dag',
+    #     trigger_dag_id='dbt_transformation_dag',
+    #     reset_dag_run=True
     # )
+
+    # Make sure this is at the end of your task dependencies
+    # For example: previous_task >> trigger_third_dag
+        # task_2 = PythonOperator(
+        #     task_id='task_2',
+        #     python_callable=say_hello_2,
+        # )
  
  
 

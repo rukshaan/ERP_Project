@@ -40,6 +40,7 @@ services:
       - ./plugins:/opt/airflow/plugins
       - ./logs:/opt/airflow/logs
       - ./Data:/opt/airflow/data
+      - ./dbt_pro:/opt/airflow/dbt_pro
 
     depends_on:
       - postgres
