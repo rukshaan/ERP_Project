@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_sales_order
+    columns:
+      - name: updated_at
+        tests: [not_null]
+
+  # - name: stg_customer
+  #   columns:
+  #     - name: customer_code
+  #       tests: [not_null]
+
+  # - name: stg_item
+  #   columns:
+  #     - name: item_code
+  #       tests: [not_null]
+
+  # - name: stg_company
+  #   columns:
+  #     - name: company_code
+  #       tests: [not_null]

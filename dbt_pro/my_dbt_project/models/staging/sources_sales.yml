@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: sales
+    schema: sales
+    tables:
+      - name: companies
+      - name: customers
+      - name: items
+      - name: sales_order_items

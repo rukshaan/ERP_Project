@@ -79,9 +79,52 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "0o00l8sh3e",
+        "owner": "Administrator",
+        "creation": "2025-07-25 10:14:04.818524",
+        "modified": "2025-07-25 10:17:25.572902",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 821.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1051",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "0o005dj32m",
+        "owner": "Administrator",
+        "creation": "2025-07-25 10:14:04.818524",
+        "modified": "2025-07-25 10:17:25.572902",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-07-25",
+        "invoice_portion": 100.0,
+        "discount_type": "Percentage",
+        "discount": 0.0,
+        "payment_amount": 821.0,
+        "outstanding": 821.0,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 821.0,
+        "parent": "ABC private LTD-1051",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "0o00pgnpqd",
@@ -553,50 +596,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "0o005dj32m",
-        "owner": "Administrator",
-        "creation": "2025-07-25 10:14:04.818524",
-        "modified": "2025-07-25 10:17:25.572902",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-07-25",
-        "invoice_portion": 100.0,
-        "discount_type": "Percentage",
-        "discount": 0.0,
-        "payment_amount": 821.0,
-        "outstanding": 821.0,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 821.0,
-        "parent": "ABC private LTD-1051",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "0o00l8sh3e",
-        "owner": "Administrator",
-        "creation": "2025-07-25 10:14:04.818524",
-        "modified": "2025-07-25 10:17:25.572902",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 821.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1051",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1113",
@@ -675,8 +675,7 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "80tnukjols",
@@ -700,9 +699,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "80tb0b8uff",
@@ -2505,7 +2501,11 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1163",
@@ -2584,9 +2584,33 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
+    "sales_team": [],
+    "payment_schedule": [
+      {
+        "name": "8186r66img",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-30 13:22:40.609331",
+        "modified": "2025-07-30 13:22:40.609331",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 0,
+        "idx": 1,
+        "due_date": "2025-07-30",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 23418.93,
+        "outstanding": 23418.93,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 23418.93,
+        "parent": "ABC private LTD-1163",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "8180j41g1i",
@@ -4390,31 +4414,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "8186r66img",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-30 13:22:40.609331",
-        "modified": "2025-07-30 13:22:40.609331",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 0,
-        "idx": 1,
-        "due_date": "2025-07-30",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 23418.93,
-        "outstanding": 23418.93,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 23418.93,
-        "parent": "ABC private LTD-1163",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": []
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1213",
@@ -4493,8 +4493,7 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "81hqo1j4i8",
@@ -4518,9 +4517,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "81hksem4k9",
@@ -6323,7 +6319,11 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1263",
@@ -6402,9 +6402,33 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
+    "sales_team": [],
+    "payment_schedule": [
+      {
+        "name": "81rcbiobj5",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-30 13:23:42.066367",
+        "modified": "2025-07-30 13:23:42.066367",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 0,
+        "idx": 1,
+        "due_date": "2025-07-30",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 34910.85,
+        "outstanding": 34910.85,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 34910.85,
+        "parent": "ABC private LTD-1263",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "81r61ief0g",
@@ -8208,31 +8232,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "81rcbiobj5",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-30 13:23:42.066367",
-        "modified": "2025-07-30 13:23:42.066367",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 0,
-        "idx": 1,
-        "due_date": "2025-07-30",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 34910.85,
-        "outstanding": 34910.85,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 34910.85,
-        "parent": "ABC private LTD-1263",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": []
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1287",
@@ -8312,8 +8312,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "827lq1svq1",
@@ -8337,27 +8336,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "827jkjb5ks",
-        "owner": "Administrator",
-        "creation": "2025-07-30 13:24:21.135192",
-        "modified": "2025-07-30 13:24:26.741878",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 4367.4,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1287",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "827j0umgc2",
@@ -8744,7 +8722,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "827jkjb5ks",
+        "owner": "Administrator",
+        "creation": "2025-07-30 13:24:21.135192",
+        "modified": "2025-07-30 13:24:26.741878",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 4367.4,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1287",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1334",
@@ -8823,9 +8823,33 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
+    "sales_team": [],
+    "payment_schedule": [
+      {
+        "name": "9jibblln3v",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-30 14:48:33.133771",
+        "modified": "2025-07-30 14:48:33.140957",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-07-30",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 851.57,
+        "outstanding": 851.57,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 851.57,
+        "parent": "ABC private LTD-1334",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "9ji53olisd",
@@ -10629,31 +10653,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "9jibblln3v",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-30 14:48:33.133771",
-        "modified": "2025-07-30 14:48:33.140957",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-07-30",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 851.57,
-        "outstanding": 851.57,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 851.57,
-        "parent": "ABC private LTD-1334",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": []
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1384",
@@ -10732,8 +10732,7 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "9k926368pn",
@@ -10757,9 +10756,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "9k8sriv9sm",
@@ -12562,7 +12558,11 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1434",
@@ -12641,9 +12641,33 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
+    "sales_team": [],
+    "payment_schedule": [
+      {
+        "name": "9l029sbrct",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-30 14:50:59.447320",
+        "modified": "2025-07-30 14:50:59.454289",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-07-30",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 680.93,
+        "outstanding": 680.93,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 680.93,
+        "parent": "ABC private LTD-1434",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "9kvsva8na2",
@@ -14447,31 +14471,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "9l029sbrct",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-30 14:50:59.447320",
-        "modified": "2025-07-30 14:50:59.454289",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-07-30",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 680.93,
-        "outstanding": 680.93,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 680.93,
-        "parent": "ABC private LTD-1434",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": []
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1484",
@@ -14550,8 +14550,7 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "9lncbtug4g",
@@ -14575,9 +14574,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "9ln58qoutm",
@@ -16380,7 +16376,11 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1509",
@@ -16458,6 +16458,30 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [],
+    "payment_schedule": [
+      {
+        "name": "uqoo8nqgbq",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-31 10:07:43.260311",
+        "modified": "2025-07-31 10:10:39.038358",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-07-31",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 1264.4,
+        "outstanding": 1264.4,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 1264.4,
+        "parent": "ABC private LTD-1509",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [
       {
         "name": "useomtqael",
@@ -16489,8 +16513,8 @@
         "doctype": "Sales Taxes and Charges"
       }
     ],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "uqoko49hof",
@@ -16647,31 +16671,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "uqoo8nqgbq",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-31 10:07:43.260311",
-        "modified": "2025-07-31 10:10:39.038358",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-07-31",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 1264.4,
-        "outstanding": 1264.4,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 1264.4,
-        "parent": "ABC private LTD-1509",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": []
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1513",
@@ -16753,8 +16753,7 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "2a5a7hhu46",
@@ -16779,27 +16778,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "2a5ask3bc0",
-        "owner": "Administrator",
-        "creation": "2025-07-31 13:17:49.766089",
-        "modified": "2025-08-19 16:53:41.062460",
-        "modified_by": "Administrator",
-        "docstatus": 0,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 241.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1513",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "2a5aqvdali",
@@ -16956,7 +16934,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "2a5ask3bc0",
+        "owner": "Administrator",
+        "creation": "2025-07-31 13:17:49.766089",
+        "modified": "2025-08-19 16:53:41.062460",
+        "modified_by": "Administrator",
+        "docstatus": 0,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 241.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1513",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1518",
@@ -17035,9 +17035,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "4oo1rfj1gv",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-31 15:31:56.886920",
+        "modified": "2025-07-31 15:36:15.783240",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 1154.7,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1518",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "4oo4k1rqs6",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-07-31 15:31:57.255549",
+        "modified": "2025-07-31 15:36:15.783240",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-07-31",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 1154.7,
+        "outstanding": 1154.7,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 1154.7,
+        "parent": "ABC private LTD-1518",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "4oo1oli4cc",
@@ -17117,49 +17159,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "4oo4k1rqs6",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-31 15:31:57.255549",
-        "modified": "2025-07-31 15:36:15.783240",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-07-31",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 1154.7,
-        "outstanding": 1154.7,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 1154.7,
-        "parent": "ABC private LTD-1518",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "4oo1rfj1gv",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-07-31 15:31:56.886920",
-        "modified": "2025-07-31 15:36:15.783240",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 1154.7,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1518",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1521",
@@ -17240,8 +17240,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "om1qs2pcb3",
@@ -17265,27 +17264,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "om1mf0kj2q",
-        "owner": "enkierp@sukan.eu",
-        "creation": "2025-08-01 09:39:36.659425",
-        "modified": "2025-08-01 09:39:43.719219",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 219.9,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1521",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "om1mm38h0b",
@@ -17364,7 +17342,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "om1mf0kj2q",
+        "owner": "enkierp@sukan.eu",
+        "creation": "2025-08-01 09:39:36.659425",
+        "modified": "2025-08-01 09:39:43.719219",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 219.9,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1521",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1523",
@@ -17444,9 +17444,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "lroqjs6ea7",
+        "owner": "Administrator",
+        "creation": "2025-08-02 12:13:09.774462",
+        "modified": "2025-08-05 09:26:54.290262",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 7.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1523",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "lrorl2artt",
+        "owner": "Administrator",
+        "creation": "2025-08-02 12:13:09.957465",
+        "modified": "2025-08-05 09:26:54.290262",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-08-02",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 7.0,
+        "outstanding": 7.0,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 7.0,
+        "parent": "ABC private LTD-1523",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "lroqqocm83",
@@ -17603,49 +17645,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "lrorl2artt",
-        "owner": "Administrator",
-        "creation": "2025-08-02 12:13:09.957465",
-        "modified": "2025-08-05 09:26:54.290262",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-08-02",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 7.0,
-        "outstanding": 7.0,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 7.0,
-        "parent": "ABC private LTD-1523",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "lroqjs6ea7",
-        "owner": "Administrator",
-        "creation": "2025-08-02 12:13:09.774462",
-        "modified": "2025-08-05 09:26:54.290262",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 7.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1523",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1525",
@@ -17725,8 +17725,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "m5h0mlf3ao",
@@ -17750,27 +17749,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "m5gulufulq",
-        "owner": "Administrator",
-        "creation": "2025-08-02 12:29:48.655459",
-        "modified": "2025-08-02 12:29:48.655459",
-        "modified_by": "Administrator",
-        "docstatus": 0,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 7800.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1525",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "m5gu6p018u",
@@ -17849,7 +17827,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "m5gulufulq",
+        "owner": "Administrator",
+        "creation": "2025-08-02 12:29:48.655459",
+        "modified": "2025-08-02 12:29:48.655459",
+        "modified_by": "Administrator",
+        "docstatus": 0,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 7800.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1525",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1532",
@@ -17926,9 +17926,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "m705h0rb75",
+        "owner": "Administrator",
+        "creation": "2025-08-03 17:39:06.533393",
+        "modified": "2025-08-03 17:40:01.621697",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "manoj_bai",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 478.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1532",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "m6gccpsfst",
+        "owner": "Administrator",
+        "creation": "2025-08-03 17:39:06.867227",
+        "modified": "2025-08-03 17:40:01.621697",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-08-03",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 478.0,
+        "outstanding": 478.0,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 478.0,
+        "parent": "ABC private LTD-1532",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "m6g9diijem",
@@ -18162,49 +18204,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "m6gccpsfst",
-        "owner": "Administrator",
-        "creation": "2025-08-03 17:39:06.867227",
-        "modified": "2025-08-03 17:40:01.621697",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-08-03",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 478.0,
-        "outstanding": 478.0,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 478.0,
-        "parent": "ABC private LTD-1532",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "m705h0rb75",
-        "owner": "Administrator",
-        "creation": "2025-08-03 17:39:06.533393",
-        "modified": "2025-08-03 17:40:01.621697",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "manoj_bai",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 478.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1532",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1533",
@@ -18284,8 +18284,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "9c8v4g4nof",
@@ -18307,39 +18306,6 @@
         "parentfield": "payment_schedule",
         "parenttype": "Sales Order",
         "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [],
-    "packed_items": [],
-    "taxes": [
-      {
-        "name": "9cfpnlbq3e",
-        "owner": "Administrator",
-        "creation": "2025-08-04 11:06:36.527056",
-        "modified": "2025-08-04 11:07:09.240108",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "charge_type": "On Net Total",
-        "account_head": "VAT 9% - FC",
-        "description": "VAT 9%",
-        "included_in_print_rate": 0,
-        "included_in_paid_amount": 0,
-        "cost_center": "Main - FC",
-        "rate": 9.0,
-        "account_currency": "EUR",
-        "tax_amount": 322.94,
-        "total": 3911.14,
-        "tax_amount_after_discount_amount": 322.94,
-        "base_tax_amount": 322.94,
-        "base_total": 3911.14,
-        "base_tax_amount_after_discount_amount": 322.94,
-        "item_wise_tax_detail": "{\"Curry leaves-2 kg per box-INDIA\":[9.0,3.06],\"OKRA\":[9.0,75.6],\"SKU0456\":[9.0,31.049999999999997],\"DO.3030.05\":[9.0,52.47],\"BRA155803\":[9.0,160.758]}",
-        "dont_recompute_tax": 0,
-        "parent": "ABC private LTD-1533",
-        "parentfield": "taxes",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Taxes and Charges"
       }
     ],
     "items": [
@@ -18727,7 +18693,41 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [],
+    "taxes": [
+      {
+        "name": "9cfpnlbq3e",
+        "owner": "Administrator",
+        "creation": "2025-08-04 11:06:36.527056",
+        "modified": "2025-08-04 11:07:09.240108",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "charge_type": "On Net Total",
+        "account_head": "VAT 9% - FC",
+        "description": "VAT 9%",
+        "included_in_print_rate": 0,
+        "included_in_paid_amount": 0,
+        "cost_center": "Main - FC",
+        "rate": 9.0,
+        "account_currency": "EUR",
+        "tax_amount": 322.94,
+        "total": 3911.14,
+        "tax_amount_after_discount_amount": 322.94,
+        "base_tax_amount": 322.94,
+        "base_total": 3911.14,
+        "base_tax_amount_after_discount_amount": 322.94,
+        "item_wise_tax_detail": "{\"Curry leaves-2 kg per box-INDIA\":[9.0,3.06],\"OKRA\":[9.0,75.6],\"SKU0456\":[9.0,31.049999999999997],\"DO.3030.05\":[9.0,52.47],\"BRA155803\":[9.0,160.758]}",
+        "dont_recompute_tax": 0,
+        "parent": "ABC private LTD-1533",
+        "parentfield": "taxes",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Taxes and Charges"
+      }
+    ],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1534",
@@ -18807,9 +18807,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "9d2mp1bki4",
+        "owner": "Administrator",
+        "creation": "2025-08-04 11:07:58.976305",
+        "modified": "2025-08-04 11:08:59.699416",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 257.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1534",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "9d2nhqgjfd",
+        "owner": "Administrator",
+        "creation": "2025-08-04 11:07:59.153989",
+        "modified": "2025-08-04 11:08:59.699416",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-08-04",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 257.0,
+        "outstanding": 257.0,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 257.0,
+        "parent": "ABC private LTD-1534",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "9d2mph8tcq",
@@ -18966,49 +19008,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "9d2nhqgjfd",
-        "owner": "Administrator",
-        "creation": "2025-08-04 11:07:59.153989",
-        "modified": "2025-08-04 11:08:59.699416",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-08-04",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 257.0,
-        "outstanding": 257.0,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 257.0,
-        "parent": "ABC private LTD-1534",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "9d2mp1bki4",
-        "owner": "Administrator",
-        "creation": "2025-08-04 11:07:58.976305",
-        "modified": "2025-08-04 11:08:59.699416",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 257.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1534",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1582",
@@ -19087,8 +19087,7 @@
     "language": "en",
     "is_internal_customer": 0,
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "v4thd1qrrb",
@@ -19112,9 +19111,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "v4takt42sk",
@@ -20917,7 +20913,11 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1831",
@@ -20999,6 +20999,48 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "604l2c4o72",
+        "owner": "Administrator",
+        "creation": "2025-08-11 14:47:49.361348",
+        "modified": "2025-08-12 10:51:09.611399",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 42.7,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1831",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "604n4116cf",
+        "owner": "Administrator",
+        "creation": "2025-08-11 14:47:49.556212",
+        "modified": "2025-08-12 10:51:09.611399",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-08-11",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 48.24,
+        "outstanding": 48.24,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 48.24,
+        "parent": "ABC private LTD-1831",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [
       {
         "name": "604l610krv",
@@ -21030,8 +21072,8 @@
         "doctype": "Sales Taxes and Charges"
       }
     ],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "604lke5nlf",
@@ -21189,49 +21231,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "604n4116cf",
-        "owner": "Administrator",
-        "creation": "2025-08-11 14:47:49.556212",
-        "modified": "2025-08-12 10:51:09.611399",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-08-11",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 48.24,
-        "outstanding": 48.24,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 48.24,
-        "parent": "ABC private LTD-1831",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "604l2c4o72",
-        "owner": "Administrator",
-        "creation": "2025-08-11 14:47:49.361348",
-        "modified": "2025-08-12 10:51:09.611399",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 42.7,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1831",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1833",
@@ -21312,8 +21312,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "1572l84oov",
@@ -21337,27 +21336,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "1570ad9ufh",
-        "owner": "Administrator",
-        "creation": "2025-08-12 15:31:02.414616",
-        "modified": "2025-08-12 15:48:55.953917",
-        "modified_by": "enkierp@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 1258.6,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1833",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "1570en7d5r",
@@ -21731,7 +21709,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "1570ad9ufh",
+        "owner": "Administrator",
+        "creation": "2025-08-12 15:31:02.414616",
+        "modified": "2025-08-12 15:48:55.953917",
+        "modified_by": "enkierp@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 1258.6,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1833",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1838",
@@ -21812,9 +21812,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "mbubvtclfc",
+        "owner": "Administrator",
+        "creation": "2025-08-13 10:49:24.345274",
+        "modified": "2025-08-13 10:49:28.264455",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 5275.8,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1838",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "mbud0o1g0a",
+        "owner": "Administrator",
+        "creation": "2025-08-13 10:49:24.577321",
+        "modified": "2025-08-13 10:49:28.264455",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-08-13",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 5275.8,
+        "outstanding": 5275.8,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 5275.8,
+        "parent": "ABC private LTD-1838",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "mbubg4bcfr",
@@ -22048,49 +22090,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "mbud0o1g0a",
-        "owner": "Administrator",
-        "creation": "2025-08-13 10:49:24.577321",
-        "modified": "2025-08-13 10:49:28.264455",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-08-13",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 5275.8,
-        "outstanding": 5275.8,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 5275.8,
-        "parent": "ABC private LTD-1838",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "mbubvtclfc",
-        "owner": "Administrator",
-        "creation": "2025-08-13 10:49:24.345274",
-        "modified": "2025-08-13 10:49:28.264455",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 5275.8,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1838",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1839",
@@ -22171,8 +22171,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "qlh8irnlgq",
@@ -22196,27 +22195,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "qlh6b58n45",
-        "owner": "Administrator",
-        "creation": "2025-08-13 14:44:13.406678",
-        "modified": "2025-09-10 21:43:36.307223",
-        "modified_by": "abishek@sukan.eu",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 219006.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1839",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "qlh6626p01",
@@ -22373,7 +22351,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "qlh6b58n45",
+        "owner": "Administrator",
+        "creation": "2025-08-13 14:44:13.406678",
+        "modified": "2025-09-10 21:43:36.307223",
+        "modified_by": "abishek@sukan.eu",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 219006.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1839",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1841",
@@ -22454,9 +22454,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "t1df2ns6g8",
+        "owner": "Administrator",
+        "creation": "2025-08-13 16:53:43.952074",
+        "modified": "2025-08-13 16:53:50.036217",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 324.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1841",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "t1dhho9cr3",
+        "owner": "Administrator",
+        "creation": "2025-08-13 16:53:44.123523",
+        "modified": "2025-08-13 16:53:50.036217",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "due_date": "2025-08-13",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 324.0,
+        "outstanding": 324.0,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 324.0,
+        "parent": "ABC private LTD-1841",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "t1dfavcnnu",
@@ -22536,49 +22578,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "t1dhho9cr3",
-        "owner": "Administrator",
-        "creation": "2025-08-13 16:53:44.123523",
-        "modified": "2025-08-13 16:53:50.036217",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "due_date": "2025-08-13",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 324.0,
-        "outstanding": 324.0,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 324.0,
-        "parent": "ABC private LTD-1841",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "t1df2ns6g8",
-        "owner": "Administrator",
-        "creation": "2025-08-13 16:53:43.952074",
-        "modified": "2025-08-13 16:53:50.036217",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 324.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1841",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1842",
@@ -22659,8 +22659,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "ee498ea0ao",
@@ -22684,27 +22683,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "ee47r8bouj",
-        "owner": "Administrator",
-        "creation": "2025-08-14 08:43:51.146905",
-        "modified": "2025-08-14 08:43:53.988350",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 144.2,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1842",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "ee479hl4no",
@@ -22859,7 +22837,29 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "ee47r8bouj",
+        "owner": "Administrator",
+        "creation": "2025-08-14 08:43:51.146905",
+        "modified": "2025-08-14 08:43:53.988350",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 144.2,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1842",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   },
   {
     "name": "ABC private LTD-1845",
@@ -22939,9 +22939,51 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
+    "sales_team": [
+      {
+        "name": "ept6a0vaka",
+        "owner": "Administrator",
+        "creation": "2025-08-14 09:03:57.367885",
+        "modified": "2025-08-14 09:04:20.104995",
+        "modified_by": "Administrator",
+        "docstatus": 2,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 874968.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1845",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "payment_schedule": [
+      {
+        "name": "ept75c37a2",
+        "owner": "Administrator",
+        "creation": "2025-08-14 09:03:57.538545",
+        "modified": "2025-08-14 09:04:20.104995",
+        "modified_by": "Administrator",
+        "docstatus": 2,
+        "idx": 1,
+        "due_date": "2025-08-14",
+        "invoice_portion": 100.0,
+        "discount": 0.0,
+        "payment_amount": 874968.0,
+        "outstanding": 874968.0,
+        "paid_amount": 0.0,
+        "discounted_amount": 0.0,
+        "base_payment_amount": 874968.0,
+        "parent": "ABC private LTD-1845",
+        "parentfield": "payment_schedule",
+        "parenttype": "Sales Order",
+        "doctype": "Payment Schedule"
+      }
+    ],
     "taxes": [],
-    "packed_items": [],
     "custom_transport": [],
+    "pricing_rules": [],
     "items": [
       {
         "name": "ept6j0ja5h",
@@ -23021,49 +23063,7 @@
         "doctype": "Sales Order Item"
       }
     ],
-    "pricing_rules": [],
-    "payment_schedule": [
-      {
-        "name": "ept75c37a2",
-        "owner": "Administrator",
-        "creation": "2025-08-14 09:03:57.538545",
-        "modified": "2025-08-14 09:04:20.104995",
-        "modified_by": "Administrator",
-        "docstatus": 2,
-        "idx": 1,
-        "due_date": "2025-08-14",
-        "invoice_portion": 100.0,
-        "discount": 0.0,
-        "payment_amount": 874968.0,
-        "outstanding": 874968.0,
-        "paid_amount": 0.0,
-        "discounted_amount": 0.0,
-        "base_payment_amount": 874968.0,
-        "parent": "ABC private LTD-1845",
-        "parentfield": "payment_schedule",
-        "parenttype": "Sales Order",
-        "doctype": "Payment Schedule"
-      }
-    ],
-    "sales_team": [
-      {
-        "name": "ept6a0vaka",
-        "owner": "Administrator",
-        "creation": "2025-08-14 09:03:57.367885",
-        "modified": "2025-08-14 09:04:20.104995",
-        "modified_by": "Administrator",
-        "docstatus": 2,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 874968.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1845",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ]
+    "packed_items": []
   },
   {
     "name": "ABC private LTD-1846",
@@ -23144,8 +23144,7 @@
     "is_internal_customer": 0,
     "party_account_currency": "EUR",
     "doctype": "Sales Order",
-    "pricing_rules": [],
-    "custom_transport": [],
+    "packed_items": [],
     "payment_schedule": [
       {
         "name": "ese2umic5i",
@@ -23169,27 +23168,6 @@
         "doctype": "Payment Schedule"
       }
     ],
-    "sales_team": [
-      {
-        "name": "ese1dd7tvr",
-        "owner": "Administrator",
-        "creation": "2025-08-14 09:08:16.067541",
-        "modified": "2025-08-14 09:08:20.045589",
-        "modified_by": "Administrator",
-        "docstatus": 1,
-        "idx": 1,
-        "sales_person": "Sunny",
-        "allocated_percentage": 100.0,
-        "allocated_amount": 874968.0,
-        "incentives": 0.0,
-        "parent": "ABC private LTD-1846",
-        "parentfield": "sales_team",
-        "parenttype": "Sales Order",
-        "doctype": "Sales Team"
-      }
-    ],
-    "packed_items": [],
-    "taxes": [],
     "items": [
       {
         "name": "ese1aha08b",
@@ -23345,6 +23323,28 @@
         "parenttype": "Sales Order",
         "doctype": "Sales Order Item"
       }
-    ]
+    ],
+    "pricing_rules": [],
+    "sales_team": [
+      {
+        "name": "ese1dd7tvr",
+        "owner": "Administrator",
+        "creation": "2025-08-14 09:08:16.067541",
+        "modified": "2025-08-14 09:08:20.045589",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 1,
+        "sales_person": "Sunny",
+        "allocated_percentage": 100.0,
+        "allocated_amount": 874968.0,
+        "incentives": 0.0,
+        "parent": "ABC private LTD-1846",
+        "parentfield": "sales_team",
+        "parenttype": "Sales Order",
+        "doctype": "Sales Team"
+      }
+    ],
+    "taxes": [],
+    "custom_transport": []
   }
 ]
