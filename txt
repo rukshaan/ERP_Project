@@ -1,0 +1,4 @@
+ERP_HOST = "demoerp.enkinext.com"
+ERP_USER = "Administrator"
+ERP_PASS = "Alk@7193$3%!"
+erp_base_url = "https://demoerp.enkinext.com" 

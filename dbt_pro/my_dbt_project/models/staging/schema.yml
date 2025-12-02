@@ -6,10 +6,16 @@ models:
       - name: updated_at
         tests: [not_null]
 
-  # - name: stg_customer
-  #   columns:
-  #     - name: customer_code
-  #       tests: [not_null]
+  - name: stg_customer
+    columns:
+      - name: customer_key
+        tests:
+          - not_null
+          - unique
+
+      - name: customer
+        tests:
+          - not_null
 
   # - name: stg_item
   #   columns:

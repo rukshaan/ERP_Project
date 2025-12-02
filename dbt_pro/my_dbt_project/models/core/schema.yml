@@ -1,15 +1,21 @@
 version: 2
 
 models:
-  # - name: fact_sales_order_line
-  #   columns:
-  #     - name: sales_order_line_key
-  #       tests: [unique, not_null]
+  - name: fact_sales_order_line
+    columns:
+      - name: sales_order_line_key
+        tests: [unique, not_null]
 
-  # - name: dim_customer
-  #   columns:
-  #     - name: customer_code
-  #       tests: [unique, not_null]
+  - name: dim_customer
+    columns:
+      - name: customer_key
+        tests:
+          - not_null
+          - unique
+
+      - name: customer
+        tests:
+          - not_null
 
   # - name: dim_item
   #   columns:
@@ -20,8 +26,3 @@ models:
   #   columns:
   #     - name: company_code
   #       tests: [unique, not_null]
-
-  - name: dim_date
-    columns:
-      - name: date_key
-        tests: [unique, not_null]

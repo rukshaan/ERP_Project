@@ -1,4 +1,4 @@
-
+-- This is a staging model for Sales Order Items
 {{ config(materialized='table') }}
 
 WITH source_data AS (
@@ -8,7 +8,7 @@ WITH source_data AS (
 )
 
 select *
-from source_data
+from source_data 
 
 /*
     Uncomment the line below to remove records with null `id` values

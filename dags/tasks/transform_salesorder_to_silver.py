@@ -117,11 +117,25 @@ def transform_salesorder_to_silver(**kwargs):
         expanded_df
         .select(
             F.col("so.name").alias("sales_order_id"),
+            F.col("so.customer").alias("customer"),
+            F.col("so.transaction_date").alias("order_date"),
+            F.col("so.delivery_date").alias("delivery_date"),
+            F.col("so.status").alias("status"),
+            F.col("so.company").alias("company"),
+            F.col("so.grand_total").alias("grand_total"),
+            F.col("so.currency").alias("currency"),
             F.explode("so.items").alias("item"),
             "batchid", "creationdate", "md5"
         )
         .select(
             "sales_order_id",
+            "customer",
+            "order_date",
+            "delivery_date",
+            "status",
+            "company",
+            "grand_total",
+            "currency",
             F.col("item.name").alias("item_id"),
             F.col("item.item_code").alias("item_code"),
             F.col("item.item_name").alias("item_name"),
@@ -143,7 +157,7 @@ def transform_salesorder_to_silver(**kwargs):
                 (F.col("item.qty") - F.col("item.delivered_qty")) == 0,
                 "Yes"
             ).otherwise("No").alias("is_fully_delivered"),
-
+        
             "batchid",
             "creationdate",
             "md5"
@@ -160,5 +174,5 @@ def transform_salesorder_to_silver(**kwargs):
 
     print(f"Silver SalesOrderItems written → {silver_items_path}")
 
-    # Show sample
+    # # Show sample
     silver_items_df.show(20, truncate=False)
