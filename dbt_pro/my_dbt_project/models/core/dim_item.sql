@@ -8,10 +8,13 @@ WITH source_data AS (
 )
 
 select 
-    item_key,
+    
     item_id,
     item_code,
-    item_name,qty,rate,amount,
+    item_name,
+    qty,
+    rate,
+    amount,
     md5(item_id) as item_hashkey
 from source_data 
 

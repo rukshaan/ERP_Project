@@ -8,132 +8,111 @@ from pyspark import SparkContext
 from pyspark import SparkConf
 import hashlib
 import pandas as pd
-from delta import configure_spark_with_delta_pip
-import datetime
+from delta import configure_spark_with_delta_pip, DeltaTable
 import pyspark.sql.functions as F
 
 
 def get_sales_data_bronze_dag(**kwargs):
 
-    # -------------------------------------
+    # ----------------------------------------------------------
     # 1. Configure Spark Session
-    # -------------------------------------
+    # ----------------------------------------------------------
     builder = (
         SparkSession.builder
-        .appName("SalesOrderDelta")
+        .appName("BronzeMultiDoctype")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
     )
-
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
-    # -------------------------------------
+    # ----------------------------------------------------------
     # 2. Setup
-    # -------------------------------------
-    today = datetime.datetime.today()
-    creationdate = today.strftime("%Y-%m-%d %H:%M:%S")
-
+    # ----------------------------------------------------------
+    today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     api = main.API()
-    doctype = "Sales Order"
+    doctypes = ["Sales Order", "Customer", "Item"]
     run_id = kwargs["run_id"]
 
-    # -------------------------------------
-    # 3. Fetch ERPNext Sales Order Data
-    # -------------------------------------
-    results = api.get_dataframe(doctype)
-    resultsdata = [i for i in results.get("name", [])][:28]
+    # Base data folders
+    base_json_dir = "/opt/airflow/data/Bronze/Volumes"
+    base_delta_dir = "/opt/airflow/data/Bronze/delta"
 
-    details_of_sales_order = []
-    for res in resultsdata:
-        details = api.get_doc_sales(doctype, res)
-        details_of_sales_order.append(details)
+    os.makedirs(base_json_dir, exist_ok=True)
+    os.makedirs(base_delta_dir, exist_ok=True)
 
-    if not details_of_sales_order:
-        raise Exception("No data found in results")
+    # ----------------------------------------------------------
+    # 3. Main Loop - Process each doctype
+    # ----------------------------------------------------------
+    for doctype in doctypes:
+        print(f" Processing doctype: {doctype}")
 
-    # print("Fetched details for sales orders:", details_of_sales_order)
+        # Fetch list
+        results = api.get_dataframe(doctype)
+        if results is None:
+            print(f" No response for {doctype}, skipping.")
+            continue
 
-    # -------------------------------------
-    # 4. Save JSON to Bronze/Volumes/YYYY/MM/DD
-    # -------------------------------------
-    exec_date = kwargs["logical_date"]
-    date_part = exec_date.strftime("%Y/%m/%d")
+        names = [i for i in results.get("name", [])]
 
-    base_dir = "/opt/airflow/data/Bronze/Volumes"
-    # output_dir = os.path.join(base_dir, date_part)
-    os.makedirs(base_dir, exist_ok=True)
+        # Fetch full docs
+        full_docs = []
+        for name in names:
+            doc = api.get_doc_sales(doctype, name)
+            if doc:
+                full_docs.append(doc)
 
-    output_path = os.path.join(base_dir, f"{doctype}.json")
+        if not full_docs:
+            print(f"⚠ No documents found for {doctype}")
+            continue
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(details_of_sales_order, f, ensure_ascii=False, indent=2, default=str)
+        # Save raw JSON in Bronze Volume
+        json_path = os.path.join(base_json_dir, f"{doctype.replace(' ', '')}.json")
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(full_docs, f, ensure_ascii=False, indent=2)
 
-    # -------------------------------------
-    # 5. Prepare Data For Delta
-    # -------------------------------------
-    json_string = json.dumps(details_of_sales_order, sort_keys=True)
-    md5_hash = hashlib.md5(json_string.encode("utf-8")).hexdigest()
-    new_df = pd.DataFrame([{
-                "data": json_string,
-                "md5": md5_hash,
-                "batchid": run_id,
-                "creationdate": creationdate,
-                "islatest": True
-            }])
+        print(f" JSON saved: {json_path}")
 
-    spark_new_df = spark.createDataFrame(new_df)
+        # Generate md5 hash
+        json_string = json.dumps(full_docs, sort_keys=True)
+        md5_hash = hashlib.md5(json_string.encode("utf-8")).hexdigest()
 
-    delta_path = "/opt/airflow/data/Bronze/delta/SalesOrder"
+        # Convert JSON string to bronze record
+        new_df = pd.DataFrame([{
+            "data": json_string,
+            "md5": md5_hash,
+            "batchid": run_id,
+            "creationdate": today,
+            "islatest": True
+        }])
 
-    # -------------------------------------
-    # 6. Load Delta Table (if exists)
-    # -------------------------------------
-    if os.path.exists(delta_path):
-        delta_df = spark.read.format("delta").load(delta_path)
-        same_md5 = delta_df.filter(F.col("md5") == md5_hash)
+        df_new = spark.createDataFrame(new_df)
 
-        if same_md5.count() > 0:
-            print(" No change detected. MD5 already exists. Skipping Delta insert.")
-            print(f"Saved JSON file only → {output_path}")
-            return output_path
+        # Delta table path
+        delta_path = os.path.join(base_delta_dir, doctype.replace(" ", ""))
+
+        # ------------------------------------------------------
+        # CHECK: If Delta table exists
+        # ------------------------------------------------------
+        if DeltaTable.isDeltaTable(spark, delta_path):
+            delta_table = DeltaTable.forPath(spark, delta_path)
+
+            # Check if hash already exists → no change
+            existing = delta_table.toDF().filter(F.col("md5") == md5_hash).count()
+
+            if existing > 0:
+                print(f" No change for {doctype}, skipping delta update.")
+                continue
+
+            # Overwrite with new bronze record
+            df_new.write.format("delta").mode("overwrite").save(delta_path)
+            print(f"✔ Updated Delta table for {doctype}")
+
         else:
-            print("Change detected → Updating Delta...")
-            updated_old_df = delta_df.withColumn(
-            "islatest",
-            F.when(F.col("islatest") == True, False).otherwise(F.col("islatest"))
-            )
+            # --------------------------------------------------
+            # FIRST RUN → CREATE DELTA TABLE
+            # --------------------------------------------------
+            print(f" Creating Delta table for {doctype} (first run)")
+            df_new.write.format("delta").mode("overwrite").save(delta_path)
 
-            # -------------------------------------
-            # 9. Create new Delta record
-            # -------------------------------------
-            
-
-            # -------------------------------------
-            # 10. Create final merged DF and overwrite Delta
-            # -------------------------------------
-            
-
-            spark_new_df.write.format("delta").mode("overwrite").save(delta_path)
-
-            print(" Delta updated successfully!")
-        
-    else:
-        spark_new_df.write.format("delta").mode("overwrite").save(delta_path)
-
-
-    # -------------------------------------
-    # 7. CHECK IF SAME MD5 EXISTS
-    # -------------------------------------
-    
-
-    # -------------------------------------
-    # 8. Mark previous latest record as FALSE
-    # -------------------------------------
-    
-
-    # Show result
-    final_read = spark.read.format("delta").load(delta_path)
-    final_read.show(truncate=False)
-
-    print(f"Saved {len(details_of_sales_order)} sales orders to {output_path}")
-    return output_path
+    print(" Bronze multi-doctype ingestion complete!")
+    return "Bronze multi-doctype ingestion complete!"
