@@ -18,24 +18,14 @@ with DAG(
     tags=['dbt', 'transformations']
 ) as dag:
 
-    # # 1️⃣ Install dbt packages (dbt_utils, etc.)
-    # dbt_deps = BashOperator(
-    #     task_id='dbt_deps',
-    #     bash_command="""
-    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
-    #         dbt deps --profiles-dir /opt/airflow/dbt_pro
-    #     """
-    # )
-    
-    # dbt_run = BashOperator(
-    #     task_id='dbt_run',
-    #     bash_command="""
-    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
-    #         dbt run --profiles-dir /opt/airflow/dbt_pro
-    #     """
-    # )
-    # dbt_deps >> dbt_run
-
+    # 1️⃣ Install dbt packages (dbt_utils, etc.)
+    dbt_deps = BashOperator(
+        task_id='dbt_deps',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt deps --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
     # 1️⃣ Install dbt packages (dbt_utils, etc.)
     # dbt_debug = BashOperator(
     #     task_id='dbt_debug',
@@ -45,7 +35,14 @@ with DAG(
     #     """
     # )
 
-    
+    # # 2️⃣ Run dbt transformations
+    dbt_run = BashOperator(
+        task_id='dbt_run',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt run --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
 
     # # 3️⃣ (Optional) Run dbt tests
     # dbt_test = BashOperator(
@@ -57,7 +54,7 @@ with DAG(
     # )
     
     # Dependencies
-    
+    dbt_deps >> dbt_run
     # dbt_run >> dbt_test
      
     # dbt_docs = BashOperator(
@@ -68,10 +65,10 @@ with DAG(
     #     """
     # )
     
-    dbt_docs_serve = BashOperator(
-        task_id='dbt_docs_serve',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
-        """
-    )
+    # dbt_docs_serve = BashOperator(
+    #     task_id='dbt_docs_serve',
+    #     bash_command="""
+    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
+    #         dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
+    #     """
+    # )
