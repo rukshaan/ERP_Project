@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from tasks.task1 import get_sales_data_bronze_dag
-from tasks.task2 import get_customer_data_bronze_dag
+
 
 import json
  

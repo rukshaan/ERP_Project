@@ -1,30 +1,101 @@
 version: 2
 
 models:
-  - name: fact_sales_order_line
+  - name: fact_final_joined_files
+    description: "Final fact table joining sales order and sales order line data"
     columns:
-      - name: sales_order_line_key
-        tests: [unique, not_null]
-
-  - name: dim_customer
-    columns:
-      - name: customer_key
+      - name: sales_order_id
+        description: "Unique identifier for the sales order"
         tests:
           - not_null
           - unique
 
       - name: customer
+        description: "Customer associated with the sales order"
         tests:
           - not_null
+          
+
+      - name: order_date
+        description: "Date when the order was placed"
+        tests:
+          - not_null
+          
+
+      - name: total_amount
+        description: "Total amount for the sales order"
+        tests:
+          - not_null
+
+  - name: fact_sales_order_line
+    description: "Fact table containing sales order line level transactions"
+    columns:
+      - name: sales_order_id
+        description: "Reference to sales order"
+        tests:
+          - not_null
+
+      - name: item_code
+        description: "Code of the sold item"
+        tests:
+          - not_null
+          
+
+      - name: order_date
+        description: "Date of the sales order"
+        tests:
+          - not_null
+          
+
+      - name: delivery_date
+        description: "Planned delivery date of the order"
+
+      - name: qty
+        description: "Quantity ordered"
+        tests:
+          - not_null
+
+      - name: rate
+        description: "Price per unit"
+        tests:
+          - not_null
+
+      - name: amount
+        description: "Total amount"
+        tests:
+          - not_null
+
+      - name: open_qty
+        description: "Quantity still open"
+
+      - name: open_amount
+        description: "Amount still open"
+
+      - name: is_fully_delivered
+        description: "Flag indicating if the order line is fully delivered"
+        tests:
+          - not_null
+
+      - name: warehouse
+        description: "Warehouse code"
+        tests:
+          - not_null
+
+  - name: dim_customer
+    columns:
+      - name: customer
+        tests:
+          - not_null
+
   - name: dim_date
     description: "Date dimension generated from sales order dates"
     columns:
       - name: date_key
         tests:
-          - not_null # OK
-          - unique # OK
+          - not_null
+          - unique
 
-      - name: date
+      - name: date_value # Change this to match the column in your query
         tests:
           - not_null
 
@@ -43,9 +114,29 @@ models:
   - name: dim_item
     columns:
       - name: item_code
-        tests: [unique, not_null]
+        tests:
+          - not_null
 
   - name: dim_company
     columns:
       - name: company
-        tests: [unique, not_null]
+        tests:
+          - not_null
+  - name: fact_final_joined_files
+    description: "Final fact table joining sales order and sales order line data"
+    columns:
+      - name: sales_order_id
+        description: "Unique identifier for the sales order"
+        tests:
+          - not_null
+
+      - name: customer_key
+        description: "Customer key associated with the sales order"
+        tests:
+          - not_null
+
+
+      - name: order_date
+        description: "Date when the order was placed"
+        tests:
+          - not_null

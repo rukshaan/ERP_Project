@@ -3,16 +3,11 @@ version: 2
 models:
   - name: stg_sales_order
     columns:
-      - name: updated_at
+      - name: sales_order_id
         tests: [not_null]
 
   - name: stg_customer
     columns:
-      - name: customer_key
-        tests:
-          - not_null
-          - unique
-
       - name: customer
         tests:
           - not_null

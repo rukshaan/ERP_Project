@@ -30,7 +30,7 @@ def get_sales_data_bronze_dag(**kwargs):
     # ----------------------------------------------------------
     today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     api = main.API()
-    doctypes = ["Sales Order", "Customer", "Item"]
+    doctypes = ["Sales Order", "Customer"]
     run_id = kwargs["run_id"]
 
     # Base data folders
@@ -62,6 +62,7 @@ def get_sales_data_bronze_dag(**kwargs):
                 full_docs.append(doc)
 
         if not full_docs:
+            print(f"⚠ No documents found for {doctype}")
             print(f"⚠ No documents found for {doctype}")
             continue
 

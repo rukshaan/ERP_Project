@@ -1,18 +1,23 @@
--- This is a staging model for Sales Order Items
 {{ config(materialized='table') }}
 
 WITH source_data AS (
-    SELECT *
-    FROM delta_scan('/opt/airflow/data/Silver/delta/SalesOrderItems')
-   
+
+    SELECT
+        *
+    FROM {{ ref('stg_sales_order') }}
+
 )
 
-select *
-from source_data 
-
-/*
-    Uncomment the line below to remove records with null `id` values
-*/
-
--- where id is not null
-
+SELECT
+    sales_order_id,
+    item_code,
+    order_date,
+    delivery_date,
+    qty,
+    rate,
+    amount,
+    open_qty,
+    open_amount,
+    is_fully_delivered,
+    warehouse
+FROM source_data

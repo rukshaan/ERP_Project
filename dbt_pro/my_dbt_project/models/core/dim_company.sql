@@ -1,20 +1,17 @@
--- This is a staging model for Sales Order Items
+-- Dimension table for Company
 {{ config(materialized='table') }}
 
-WITH source_data AS (
-    SELECT *
-    FROM delta_scan('/opt/airflow/data/Silver/delta/SalesOrderItems')
-   
+WITH cte AS (
+    SELECT
+        {{ dbt_utils.generate_surrogate_key(['company']) }} AS company_key,  -- surrogate key
+        company, 
+        ROW_NUMBER() OVER(PARTITION BY company ORDER BY company) AS rank  -- deduplicate
+    FROM {{ ref('stg_sales_order') }}
 )
 
-select 
-    company,
-    md5(company) as company_key
-from source_data 
-
-/*
-    Uncomment the line below to remove records with null `id` values
-*/
-
--- where id is not null
-
+SELECT
+    company_key,
+    company
+FROM cte
+where rank=1
+ORDER BY company

@@ -1,24 +1,39 @@
 {{ config(materialized='table') }}
 
-WITH base AS (
-    SELECT
-        MAKE_DATE(2015, 1, 1) + CAST(x AS INTEGER) AS date
-    FROM range(0, 6000) AS r(x)
+WITH cte AS (
+    SELECT DISTINCT
+        CAST(order_date AS DATE) AS date_value,  -- convert order_date to DATE
+        md5(CAST(order_date AS text)) AS date_key  -- generate surrogate key based on order_date
+    FROM {{ ref('stg_sales_order') }}  -- get data from the staging table `stg_sales_order`
+    WHERE order_date IS NOT NULL  -- exclude NULL order dates
 ),
 
 dates AS (
     SELECT
-        CAST(STRFTIME('%Y%m%d', date) AS INTEGER) AS date_key,
-        date,
-        EXTRACT(year FROM date) AS year,
-        EXTRACT(month FROM date) AS month,
-        EXTRACT(day FROM date) AS day,
-        EXTRACT(quarter FROM date) AS quarter,
-        STRFTIME('%B', date) AS month_name,
-        EXTRACT(week FROM date) AS week,
-        EXTRACT(dow FROM date) AS day_of_week,
-        STRFTIME('%A', date) AS day_name
-    FROM base
+        date_key,
+        date_value,
+        EXTRACT(YEAR FROM date_value) AS year,
+        EXTRACT(MONTH FROM date_value) AS month,
+        EXTRACT(DAY FROM date_value) AS day,
+        EXTRACT(QUARTER FROM date_value) AS quarter,
+        strftime('%B', date_value) AS month_name,  -- DuckDB formatting for full month name
+        EXTRACT(WEEK FROM date_value) AS week,
+        EXTRACT(DOW FROM date_value) AS day_of_week,  -- extract the day of the week (0=Sunday, 6=Saturday)
+        strftime('%A', date_value) AS day_name   -- DuckDB formatting for full day name
+    FROM cte
 )
 
-SELECT * FROM dates
+SELECT 
+    date_key,
+    date_value,
+    year,
+    month,
+    day,
+    quarter,
+    month_name,
+    week,
+    day_of_week,
+    day_name
+FROM dates
+
+ORDER BY date_value
