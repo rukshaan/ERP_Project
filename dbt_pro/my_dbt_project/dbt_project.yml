@@ -27,9 +27,9 @@ models:
       +materialized: table
       +schema: prod
 
-    example:
-      +materialized: table
-      +schema: dev
-
     marts:
+      +materialized: table
+      +schema: prod
+    snapshots:
+      +materialized: table
       +schema: prod

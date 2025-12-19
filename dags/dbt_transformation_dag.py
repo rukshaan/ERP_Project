@@ -19,13 +19,13 @@ with DAG(
 ) as dag:
 
     # 1️⃣ Install dbt packages (dbt_utils, etc.)
-    dbt_deps = BashOperator(
-        task_id='dbt_deps',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt deps --profiles-dir /opt/airflow/dbt_pro
-        """
-    )
+    # dbt_deps = BashOperator(
+    #     task_id='dbt_deps',
+    #     bash_command="""
+    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
+    #         dbt deps --profiles-dir /opt/airflow/dbt_pro
+    #     """
+    # )
     # 1️⃣ Install dbt packages (dbt_utils, etc.)
     # dbt_debug = BashOperator(
     #     task_id='dbt_debug',
@@ -43,6 +43,7 @@ with DAG(
             dbt run --profiles-dir /opt/airflow/dbt_pro
         """
     )
+    
 
     # # 3️⃣ (Optional) Run dbt tests
     # dbt_test = BashOperator(
@@ -54,7 +55,7 @@ with DAG(
     # )
     
     # Dependencies
-    dbt_deps >> dbt_run
+    
     # dbt_run >> dbt_test
      
     # dbt_docs = BashOperator(

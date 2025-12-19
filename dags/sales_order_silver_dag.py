@@ -7,7 +7,8 @@ import requests
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
 from tasks.transform_salesorder_to_silver import transform_salesorder_to_silver
-
+from tasks.task2 import transform_customer_to_silver
+from tasks.check_delta import check_schema
 
 default_args = {
     "owner": "airflow",
@@ -25,9 +26,17 @@ with DAG(
 
     
 
-    silver_task = PythonOperator(
-        task_id="transform_salesorder_to_silver",
-        python_callable=transform_salesorder_to_silver,
+    # silver_task = PythonOperator(
+    #     task_id="transform_salesorder_to_silver",
+    #     python_callable=transform_salesorder_to_silver,
+    # )
+    # customer_task = PythonOperator(
+    #     task_id="transform_customer_to_silver",
+    #     python_callable=transform_customer_to_silver,
+    # )
+    schema_check = PythonOperator(
+        task_id="check_schema_files",
+        python_callable=check_schema,
     )
 
-    silver_task
+    # customer_task >> silver_task

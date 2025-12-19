@@ -8,7 +8,7 @@ WITH source_data AS (
 SELECT
     sd.sales_order_id,
     sd.customer AS customer_key,
-    c.customer,
+    c.customer_name,
     sd.item_code,
     i.item_name,
     sd.order_date,
@@ -23,7 +23,7 @@ SELECT
     comp.company AS company
 FROM source_data sd
 LEFT JOIN {{ ref('dim_customer') }} c
-    ON sd.customer = c.customer
+    ON sd.customer = c.customer_name
 LEFT JOIN {{ ref('dim_item') }} i
     ON sd.item_code = i.item_code
 LEFT JOIN {{ ref('dim_company') }} comp

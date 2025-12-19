@@ -2,15 +2,15 @@
 
 WITH cte AS (
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['customer']) }} AS customer_key,  -- surrogate key
-        customer,
-        ROW_NUMBER() OVER(PARTITION BY customer ORDER BY customer) AS rank       -- deduplicate
+        {{ dbt_utils.generate_surrogate_key(['customer_name']) }} AS customer_key,  -- surrogate key
+        customer_name,
+        ROW_NUMBER() OVER(PARTITION BY customer_name ORDER BY customer_name) AS rank       -- deduplicate
     FROM {{ ref('stg_customer') }}
 )
 
 SELECT
     customer_key,
-    customer
+    customer_name
 FROM cte
 WHERE rank = 1
-ORDER BY customer
+ORDER BY customer_name

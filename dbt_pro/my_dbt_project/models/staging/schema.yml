@@ -8,7 +8,7 @@ models:
 
   - name: stg_customer
     columns:
-      - name: customer
+      - name: customer_id
         tests:
           - not_null
 

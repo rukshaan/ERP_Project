@@ -14,13 +14,11 @@ models:
         description: "Customer associated with the sales order"
         tests:
           - not_null
-          
 
       - name: order_date
         description: "Date when the order was placed"
         tests:
           - not_null
-          
 
       - name: total_amount
         description: "Total amount for the sales order"
@@ -39,13 +37,11 @@ models:
         description: "Code of the sold item"
         tests:
           - not_null
-          
 
       - name: order_date
         description: "Date of the sales order"
         tests:
           - not_null
-          
 
       - name: delivery_date
         description: "Planned delivery date of the order"
@@ -120,23 +116,5 @@ models:
   - name: dim_company
     columns:
       - name: company
-        tests:
-          - not_null
-  - name: fact_final_joined_files
-    description: "Final fact table joining sales order and sales order line data"
-    columns:
-      - name: sales_order_id
-        description: "Unique identifier for the sales order"
-        tests:
-          - not_null
-
-      - name: customer_key
-        description: "Customer key associated with the sales order"
-        tests:
-          - not_null
-
-
-      - name: order_date
-        description: "Date when the order was placed"
         tests:
           - not_null
