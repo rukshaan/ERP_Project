@@ -27,10 +27,10 @@ SELECT
     amount,
     open_qty,
     open_amount,
-    is_fully_delivered,
-    warehouse,
-    status,
-    currency
+    COALESCE(is_fully_delivered, 0) AS is_fully_delivered,
+    COALESCE(warehouse, 'N/A') AS warehouse,
+    COALESCE(status, 'Open') AS status,
+    COALESCE(currency, 'N/A') AS currency
 
 FROM source_data
 
