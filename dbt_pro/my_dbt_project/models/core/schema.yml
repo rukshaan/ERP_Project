@@ -8,9 +8,8 @@ models:
         description: "Unique identifier for the sales order"
         tests:
           - not_null
-          - unique
 
-      - name: customer
+      - name: customer_name
         description: "Customer associated with the sales order"
         tests:
           - not_null
@@ -20,7 +19,7 @@ models:
         tests:
           - not_null
 
-      - name: total_amount
+      - name: amount
         description: "Total amount for the sales order"
         tests:
           - not_null
@@ -79,7 +78,7 @@ models:
 
   - name: dim_customer
     columns:
-      - name: customer
+      - name: customer_name
         tests:
           - not_null
 

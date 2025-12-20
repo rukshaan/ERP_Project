@@ -26,17 +26,19 @@ with DAG(
 
     
 
-    # silver_task = PythonOperator(
-    #     task_id="transform_salesorder_to_silver",
-    #     python_callable=transform_salesorder_to_silver,
-    # )
-    # customer_task = PythonOperator(
-    #     task_id="transform_customer_to_silver",
-    #     python_callable=transform_customer_to_silver,
-    # )
-    schema_check = PythonOperator(
-        task_id="check_schema_files",
-        python_callable=check_schema,
+    silver_task = PythonOperator(
+        task_id="transform_salesorder_to_silver",
+        python_callable=transform_salesorder_to_silver,
     )
+    customer_task = PythonOperator(
+        task_id="transform_customer_to_silver",
+        python_callable=transform_customer_to_silver,
+    )
+    customer_task >> silver_task
 
-    # customer_task >> silver_task
+    # schema_check = PythonOperator(
+    #     task_id="check_schema_files",
+    #     python_callable=check_schema,
+    # )
+
+    

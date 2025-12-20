@@ -36,13 +36,13 @@ with DAG(
     # )
 
     # # 2️⃣ Run dbt transformations
-    dbt_run = BashOperator(
-        task_id='dbt_run',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt run --profiles-dir /opt/airflow/dbt_pro
-        """
-    )
+    # dbt_run = BashOperator(
+    #     task_id='dbt_run',
+    #     bash_command="""
+    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
+    #         dbt run --profiles-dir /opt/airflow/dbt_pro
+    #     """
+    # )
     
 
     # # 3️⃣ (Optional) Run dbt tests
@@ -66,10 +66,11 @@ with DAG(
     #     """
     # )
     
-    # dbt_docs_serve = BashOperator(
-    #     task_id='dbt_docs_serve',
-    #     bash_command="""
-    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
-    #         dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
-    #     """
-    # )
+    dbt_docs_serve = BashOperator(
+        task_id='dbt_docs_serve',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
+        """
+    )
+    # dbt_deps >> dbt_run
