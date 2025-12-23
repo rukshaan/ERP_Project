@@ -13,19 +13,30 @@ default_args = {
 with DAG(
     'dbt_transformation_dag',
     default_args=default_args,
-    schedule='@daily',
+    schedule='0 * * * *',  # Run hourly
     catchup=False,
     tags=['dbt', 'transformations']
 ) as dag:
 
     # 1️⃣ Install dbt packages (dbt_utils, etc.)
-    # dbt_deps = BashOperator(
-    #     task_id='dbt_deps',
-    #     bash_command="""
-    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
-    #         dbt deps --profiles-dir /opt/airflow/dbt_pro
-    #     """
-    # )
+    dbt_deps = BashOperator(
+        task_id='dbt_deps',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt deps --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
+
+    dbt_run = BashOperator(
+        task_id='dbt_run',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt run --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
+    dbt_deps >> dbt_run
+
+
     # 1️⃣ Install dbt packages (dbt_utils, etc.)
     # dbt_debug = BashOperator(
     #     task_id='dbt_debug',
@@ -35,14 +46,6 @@ with DAG(
     #     """
     # )
 
-    # # 2️⃣ Run dbt transformations
-    # dbt_run = BashOperator(
-    #     task_id='dbt_run',
-    #     bash_command="""
-    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
-    #         dbt run --profiles-dir /opt/airflow/dbt_pro
-    #     """
-    # )
     
 
     # # 3️⃣ (Optional) Run dbt tests
@@ -57,6 +60,7 @@ with DAG(
     # Dependencies
     
     # dbt_run >> dbt_test
+    
      
     # dbt_docs = BashOperator(
     #     task_id='dbt_docs_generate',
@@ -66,11 +70,11 @@ with DAG(
     #     """
     # )
     
-    dbt_docs_serve = BashOperator(
-        task_id='dbt_docs_serve',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
-        """
-    )
-    # dbt_deps >> dbt_run
+    # dbt_docs_serve = BashOperator(
+    #     task_id='dbt_docs_serve',
+    #     bash_command="""
+    #         cd /opt/airflow/dbt_pro/my_dbt_project &&
+    #         dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
+    #     """
+    # )
+    # dbt_docs >> dbt_docs_serve

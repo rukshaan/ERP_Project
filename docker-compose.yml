@@ -29,7 +29,8 @@ services:
       AIRFLOW__WEBSERVER__PROXY_FIX_X_FOR: 1
       AIRFLOW__WEBSERVER__PROXY_FIX_X_HOST: 1
       AIRFLOW__WEBSERVER__PROXY_FIX_X_PREFIX: 1
-      _PIP_ADDITIONAL_REQUIREMENTS: "duckdb dbt-core dbt-duckdb python-dotenv pandas pyarrow deepdiff delta-spark pyspark deltalake great-expectations==0.15.13 streamlit"
+      # For Spark 3.5.x compatibility
+      _PIP_ADDITIONAL_REQUIREMENTS: "pyspark==3.5.3 delta-spark==3.2.0 duckdb dbt-core dbt-duckdb python-dotenv pandas pyarrow deepdiff deltalake great-expectations==0.15.13 streamlit"
 
     ports:
       - "8083:8080"

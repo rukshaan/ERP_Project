@@ -1,11 +1,8 @@
 from . import main
 import os
 import json
-import pyspark
 from datetime import datetime
 from pyspark.sql import SparkSession
-from pyspark import SparkContext
-from pyspark import SparkConf
 import hashlib
 import pandas as pd
 from delta import configure_spark_with_delta_pip, DeltaTable
@@ -15,16 +12,25 @@ import pyspark.sql.functions as F
 def get_sales_data_bronze_dag(**kwargs):
 
     # ----------------------------------------------------------
-    # 1. Configure Spark Session
+    # 1. Configure Spark Session (FIXED VERSION)
     # ----------------------------------------------------------
     builder = (
         SparkSession.builder
         .appName("BronzeMultiDoctype")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+        .config("spark.driver.memory", "2g")
+        .config("spark.executor.memory", "2g")
+        .config("spark.sql.warehouse.dir", "/opt/airflow/data/warehouse")
     )
+    
+    # Use configure_spark_with_delta_pip BEFORE getOrCreate
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
-
+    
+    # Verify Delta is working
+    print(f"Spark version: {spark.version}")
+    print(f"Spark config extensions: {spark.conf.get('spark.sql.extensions')}")
+    
     # ----------------------------------------------------------
     # 2. Setup
     # ----------------------------------------------------------
@@ -63,7 +69,6 @@ def get_sales_data_bronze_dag(**kwargs):
 
         if not full_docs:
             print(f"⚠ No documents found for {doctype}")
-            print(f"⚠ No documents found for {doctype}")
             continue
 
         # Save raw JSON in Bronze Volume
@@ -92,22 +97,43 @@ def get_sales_data_bronze_dag(**kwargs):
         delta_path = os.path.join(base_delta_dir, doctype.replace(" ", ""))
 
         # ------------------------------------------------------
-        # CHECK: If Delta table exists
+        # FIX: Check if Delta table exists (SAFER METHOD)
         # ------------------------------------------------------
-        if DeltaTable.isDeltaTable(spark, delta_path):
-            delta_table = DeltaTable.forPath(spark, delta_path)
+        try:
+            # Method 1: Try to read as delta table
+            existing_df = spark.read.format("delta").load(delta_path)
+            delta_exists = True
+            print(f" Delta table exists at {delta_path}")
+        except Exception as e:
+            # Method 2: Check for _delta_log directory
+            delta_log_path = os.path.join(delta_path, "_delta_log")
+            delta_exists = os.path.exists(delta_log_path)
+            if delta_exists:
+                print(f" Delta log found at {delta_log_path}")
+            else:
+                print(f" Delta table does not exist at {delta_path}, will create")
 
-            # Check if hash already exists → no change
-            existing = delta_table.toDF().filter(F.col("md5") == md5_hash).count()
+        if delta_exists:
+            try:
+                # Try to get DeltaTable object
+                delta_table = DeltaTable.forPath(spark, delta_path)
+                
+                # Check if hash already exists
+                existing = delta_table.toDF().filter(F.col("md5") == md5_hash).count()
 
-            if existing > 0:
-                print(f" No change for {doctype}, skipping delta update.")
-                continue
+                if existing > 0:
+                    print(f" No change for {doctype}, skipping delta update.")
+                    continue
 
-            # Overwrite with new bronze record
-            df_new.write.format("delta").mode("overwrite").save(delta_path)
-            print(f"✔ Updated Delta table for {doctype}")
-
+                # Overwrite with new bronze record
+                df_new.write.format("delta").mode("overwrite").save(delta_path)
+                print(f"✔ Updated Delta table for {doctype}")
+                
+            except Exception as e:
+                print(f"Error accessing Delta table: {e}")
+                # Fallback to simple write
+                df_new.write.format("delta").mode("overwrite").save(delta_path)
+                print(f" Created/Overwrote Delta table for {doctype} (fallback)")
         else:
             # --------------------------------------------------
             # FIRST RUN → CREATE DELTA TABLE
@@ -116,4 +142,5 @@ def get_sales_data_bronze_dag(**kwargs):
             df_new.write.format("delta").mode("overwrite").save(delta_path)
 
     print(" Bronze multi-doctype ingestion complete!")
+    spark.stop()  # IMPORTANT: Close Spark session
     return "Bronze multi-doctype ingestion complete!"

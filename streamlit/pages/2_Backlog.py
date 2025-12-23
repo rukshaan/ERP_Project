@@ -52,14 +52,14 @@ st.plotly_chart(fig2, use_container_width=True)
 
 # --- Table: Open Orders ---
 table_query = """
-SELECT f.sales_order_id, c.customer_name, i.item_name, f.qty, f.delivery_qty,
-       (f.qty - f.delivery_qty) AS open_qty,
-       (f.qty - f.delivery_qty) * f.rate AS open_amount,
+SELECT f.sales_order_id, c.customer_name, i.item_name, f.qty, f.open_qty,
+       (f.qty - f.open_qty) AS open_qty,
+       (f.qty - f.open_qty) * f.rate AS open_amount,
        f.delivery_date
 FROM main_prod.fact_final_joined_files f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
-WHERE f.qty - f.delivery_qty > 0
+WHERE f.qty - f.open_qty > 0
 ORDER BY f.delivery_date ASC
 LIMIT 100
 """

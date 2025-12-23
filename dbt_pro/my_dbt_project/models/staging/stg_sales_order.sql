@@ -37,7 +37,7 @@ SELECT
     CAST(amount AS DOUBLE)                AS amount,
     CAST(open_qty AS DOUBLE)             AS open_qty,
     CAST(open_amount AS DOUBLE)           AS open_amount,
-
+    CAST(status AS VARCHAR)                AS status,
     /*  Safe Yes/No → 1/0 normalization */
     CASE
         WHEN LOWER(TRIM(is_fully_delivered)) IN ('yes', 'y', 'true', '1') THEN 1

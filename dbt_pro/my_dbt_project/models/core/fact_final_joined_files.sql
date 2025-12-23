@@ -18,6 +18,7 @@ SELECT
     COALESCE(sd.amount, 0) AS amount,
     COALESCE(sd.open_qty, 0) AS open_qty,
     COALESCE(sd.open_amount, 0) AS open_amount,
+    COALESCE(sd.status, 'Status_Pending') AS order_status,
 
     COALESCE(sd.is_fully_delivered, false) AS is_fully_delivered,
 

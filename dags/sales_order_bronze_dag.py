@@ -27,7 +27,7 @@ with DAG(
     'first_dag',
     default_args=default_args,
     description='Fetch user data from API and store it in DuckDB',
-    schedule='@daily', 
+    schedule='0 * * * *',  # Run hourly
     catchup=False,
     
 ) as dag:
