@@ -7,13 +7,16 @@ DB_PATH = "C:/Users/FOM018/Desktop/ERP_Project/Data/Silver/dev.duckdb"
 con = duckdb.connect(DB_PATH, read_only=True)
 
 st.title("🚚 Delivery Performance & Insights")
+st.set_page_config(
+    layout="wide"
+)
 
 # --- KPI ---
 kpi_query = """
 SELECT
-  COUNT(DISTINCT CASE WHEN delivery_date <= promised_delivery_date THEN order_id END) AS on_time,
-  COUNT(DISTINCT CASE WHEN delivery_date > promised_delivery_date THEN order_id END) AS late,
-  AVG(DATEDIFF('day', promised_delivery_date, delivery_date)) AS avg_delay
+  COUNT(DISTINCT CASE WHEN delivery_date <= delivery_date THEN sales_order_id END) AS on_time,
+  COUNT(DISTINCT CASE WHEN delivery_date > delivery_date THEN sales_order_id END) AS late,
+  AVG(DATEDIFF('day', delivery_date, delivery_date)) AS avg_delay
 FROM main_prod.fact_final_joined_files
 """
 kpi_df = con.execute(kpi_query).df()
@@ -31,9 +34,9 @@ st.plotly_chart(fig, use_container_width=True)
 
 # --- Top Customers by Order Value ---
 customer_query = """
-SELECT c.customer_name, SUM(f.order_value) AS total_value
+SELECT c.customer_name, SUM(f.amount) AS total_value
 FROM main_prod.fact_final_joined_files f
-JOIN main_prod.dim_customer c ON f.customer_id = c.customer_id
+JOIN main_prod.dim_customer c ON f.customer_name= c.customer_name
 GROUP BY c.customer_name
 ORDER BY total_value DESC
 LIMIT 10
@@ -44,9 +47,9 @@ st.plotly_chart(fig2, use_container_width=True)
 
 # --- Top Items by Demand ---
 item_query = """
-SELECT i.item_name, SUM(f.ordered_qty) AS total_qty
+SELECT i.item_name, SUM(f.qty) AS total_qty
 FROM main_prod.fact_final_joined_files f
-JOIN main_prod.dim_item i ON f.item_id = i.item_id
+JOIN main_prod.dim_item i ON f.item_code = i.item_code
 GROUP BY i.item_name
 ORDER BY total_qty DESC
 LIMIT 10

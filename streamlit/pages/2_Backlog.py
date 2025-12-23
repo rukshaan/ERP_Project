@@ -7,7 +7,9 @@ DB_PATH = "C:/Users/FOM018/Desktop/ERP_Project/Data/Silver/dev.duckdb"
 con = duckdb.connect(DB_PATH, read_only=True)
 
 st.title("📋 Backlog / Open Orders")
-
+st.set_page_config(
+    layout="wide"
+)
 # --- KPI ---
 kpi_query = """
 SELECT SUM(open_qty * rate) AS total_open_value,
@@ -47,8 +49,36 @@ ORDER BY open_value DESC
 LIMIT 10
 """
 item_df = con.execute(item_query).df()
-fig2 = px.bar(item_df, x='item_name', y='open_value', title="Open Order Value by Item")
-st.plotly_chart(fig2, use_container_width=True)
+
+# ---------------- Bar + Pie Side-by-Side ----------------
+c1, c2 = st.columns(2)
+
+with c1:
+    fig2 = px.bar(item_df, x='item_name', y='open_value', title="Open Order Value by Item")
+    st.plotly_chart(fig2, use_container_width=True)
+
+with c2:
+    # Custom vibrant color palette
+    custom_colors = ["#53EBAE", "#6EFF6E", "#6EC7FF", "#FFD36E", "#FF6E6E",
+                 "#6EFFD3", "#D36EFF", "#FFB26E", "#6E6EFF", "#390739"]
+
+
+
+
+
+
+
+    pie_fig = px.pie(
+        item_df,
+        names="item_name",
+        values="open_value",
+        title=" Item Contribution to Open Orders",
+        hole=0.4,  # Donut style
+        color_discrete_sequence=custom_colors
+    )
+    pie_fig.update_traces(textposition="inside", textinfo="percent+label")
+    pie_fig.update_layout(legend_title_text="Items", height=500)
+    st.plotly_chart(pie_fig, use_container_width=True)
 
 # --- Table: Open Orders ---
 table_query = """
@@ -64,4 +94,4 @@ ORDER BY f.delivery_date ASC
 LIMIT 100
 """
 table_df = con.execute(table_query).df()
-st.dataframe(table_df)
+st.dataframe(table_df, use_container_width=True)
