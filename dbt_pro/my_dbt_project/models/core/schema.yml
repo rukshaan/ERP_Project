@@ -81,6 +81,19 @@ models:
       - name: customer_name
         tests:
           - not_null
+      - name: customer_key
+        tests:
+          - not_null
+          - unique
+      - name: territory
+        tests:
+          - not_null
+      - name: customer_type
+        tests:
+          - not_null
+      - name: customer_group
+        tests:
+          - not_null
 
   - name: dim_date
     description: "Date dimension generated from sales order dates"

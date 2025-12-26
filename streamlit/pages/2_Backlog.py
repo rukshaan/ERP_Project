@@ -7,9 +7,7 @@ DB_PATH = "./data/Silver/dev.duckdb"
 con = duckdb.connect(DB_PATH, read_only=False)
 
 st.title("📋 Backlog / Open Orders")
-st.set_page_config(
-    layout="wide"
-)
+
 # --- KPI ---
 kpi_query = """
 SELECT SUM(open_qty * rate) AS total_open_value,

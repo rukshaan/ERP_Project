@@ -252,3 +252,241 @@ ORDER BY f.order_date DESC
 """
 table_df = con.execute(table_query).df()
 st.dataframe(table_df, use_container_width=True)
+
+# ==================================================
+# 🌍 CUSTOMER SALES – WORLD MAP VISUALIZATION
+# ==================================================
+
+st.subheader("🌍 Customer Sales – World Map View")
+
+# Query for customer sales data
+map_query = """
+SELECT
+    c.customer_name,
+    c.territory,
+    SUM(f.amount) AS total_sales,
+    COUNT(DISTINCT f.sales_order_id) AS total_orders,
+    AVG(f.amount) AS avg_order_value
+FROM main_prod.fact_final_joined_files f
+JOIN main_prod.dim_customer c
+    ON f.customer_name = c.customer_name
+GROUP BY c.customer_name, c.territory
+HAVING SUM(f.amount) > 0
+"""
+
+map_df = con.execute(map_query).df()
+
+if map_df.empty:
+    st.warning("No data available for world map.")
+else:
+    # Create a container with custom styling
+    with st.container():
+        st.markdown("""
+        <style>
+        .map-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .map-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .map-subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        st.markdown('<div class="map-container">', unsafe_allow_html=True)
+        st.markdown('<div class="map-title">Customer Sales Distribution</div>', unsafe_allow_html=True)
+        st.markdown('<div class="map-subtitle">Global overview of sales performance across territories</div>', unsafe_allow_html=True)
+    
+    # Create two columns for map and metrics
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        # Create the world map
+        fig_map = px.scatter_geo(
+            map_df,
+            locations="territory",
+            locationmode="country names",
+            size="total_sales",
+            color="total_sales",
+            hover_name="customer_name",
+            size_max=35,
+            projection="natural earth",
+            color_continuous_scale=px.colors.sequential.Viridis,
+            hover_data={
+                "territory": True,
+                "total_sales": ":$,.2f",
+                "total_orders": True,
+                "avg_order_value": ":$,.2f"
+            },
+            custom_data=["customer_name", "territory", "total_sales", "total_orders", "avg_order_value"]
+        )
+        
+        # Customize hover template
+        fig_map.update_traces(
+            hovertemplate="""
+            <div style='background: white; padding: 10px; border-radius: 5px; border: 1px solid #e0e0e0'>
+                <span style='font-size: 16px; font-weight: bold; color: #667eea'>%{customdata[0]}</span><br>
+                <span style='color: #666'>📍 %{customdata[1]}</span><br><br>
+                <span style='font-weight: bold'>Total Sales:</span> $%{customdata[2]:,.2f}<br>
+                <span style='font-weight: bold'>Total Orders:</span> %{customdata[3]}<br>
+                <span style='font-weight: bold'>Avg Order Value:</span> $%{customdata[4]:,.2f}
+            </div>
+            <extra></extra>
+            """,
+            marker=dict(
+                line=dict(width=1, color='white'),
+                sizemode='diameter'
+            )
+        )
+        
+        # Enhanced layout with clean design
+        fig_map.update_layout(
+            height=500,
+            margin=dict(l=0, r=0, t=30, b=0),
+            geo=dict(
+                showframe=False,
+                showcoastlines=True,
+                coastlinecolor="lightgray",
+                showland=True,
+                landcolor="rgba(245, 245, 245, 0.8)",
+                showocean=True,
+                oceancolor="rgba(173, 216, 230, 0.3)",
+                showcountries=True,
+                countrycolor="white",
+                countrywidth=0.5,
+                bgcolor='rgba(255, 255, 255, 0.0)',
+                projection_type="natural earth"
+            ),
+            coloraxis_colorbar=dict(
+                title="Sales ($)",
+                thickness=20,
+                len=0.75,
+                yanchor="middle",
+                y=0.5,
+                xanchor="right",
+                x=1.05,
+                tickformat="$,.0f",
+                title_font=dict(size=12),
+                tickfont=dict(size=10)
+            ),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            title=dict(
+                text="",
+                font=dict(size=18, color="#2c3e50"),
+                x=0.5,
+                xanchor="center"
+            )
+        )
+        
+        st.plotly_chart(fig_map, use_container_width=True)
+    
+    with col2:
+        # Display key metrics in a clean sidebar style
+        st.markdown("""
+        <style>
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid #667eea;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            line-height: 1.2;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .country-badge {
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 3px;
+            font-size: 11px;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Top metrics
+        total_sales = map_df['total_sales'].sum()
+        avg_sales = map_df['total_sales'].mean()
+        unique_countries = map_df['territory'].nunique()
+        top_country = map_df.loc[map_df['total_sales'].idxmax(), 'territory']
+        top_country_sales = map_df['total_sales'].max()
+        
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">TOTAL SALES</div>
+            <div class="metric-value">${total_sales:,.0f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">COUNTRIES</div>
+            <div class="metric-value">{unique_countries}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">TOP COUNTRY</div>
+            <div class="metric-value">{top_country}</div>
+            <div class="metric-label">${top_country_sales:,.0f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">AVG SALES PER CUSTOMER</div>
+            <div class="metric-value">${avg_sales:,.0f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Top countries list
+        st.markdown("**Top 5 Countries**")
+        top_countries = map_df.groupby('territory')['total_sales'].sum().nlargest(5)
+        for country, sales in top_countries.items():
+            st.markdown(f"""
+            <div style='padding: 8px 0; border-bottom: 1px solid #eee'>
+                <div style='font-size: 14px; font-weight: 500'>{country}</div>
+                <div style='font-size: 12px; color: #667eea'>${sales:,.0f}</div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Close the container
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Add some insights below the map
+    with st.expander("📊 Map Insights"):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Customers", len(map_df))
+        with col2:
+            st.metric("Average Orders per Customer", 
+                     f"{map_df['total_orders'].mean():.1f}")
+        with col3:
+            st.metric("Sales Concentration",
+                     f"{(top_country_sales / total_sales * 100):.1f}%")

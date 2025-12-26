@@ -7,9 +7,6 @@ DB_PATH = "./data/Silver/dev.duckdb"
 con = duckdb.connect(DB_PATH, read_only=False)
 
 st.title("🚚 Delivery Performance & Insights")
-st.set_page_config(
-    layout="wide"
-)
 
 # --- KPI ---
 kpi_query = """
