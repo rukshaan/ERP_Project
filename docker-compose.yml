@@ -62,6 +62,17 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  streamlit:
+    image: docker.io/joshxt/streamlit
+    container_name: streamlit
+
+    volumes:
+      - ./streamlit:/app
+      - ./Data:/app/data
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "/app/app.py"]
+
 volumes:
   airflow_compose_postgres_data:
   airflow_compose_airflow_data:

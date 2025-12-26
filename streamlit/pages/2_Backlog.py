@@ -2,9 +2,9 @@ import streamlit as st
 import duckdb
 import pandas as pd
 import plotly.express as px
-
-DB_PATH = "C:/Users/FOM018/Desktop/ERP_Project/Data/Silver/dev.duckdb"
-con = duckdb.connect(DB_PATH, read_only=True)
+DB_PATH = "./data/Silver/dev.duckdb"
+# DB_PATH = "C:/Users/FOM018/Desktop/ERP_Project/Data/Silver/dev.duckdb"
+con = duckdb.connect(DB_PATH, read_only=False)
 
 st.title("📋 Backlog / Open Orders")
 st.set_page_config(

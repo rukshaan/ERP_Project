@@ -1,10 +1,10 @@
 import streamlit as st
 import duckdb
-# DB_PATH = "/opt/airflow/data/Silver/dev.duckdb"
-DB_PATH = r"C:\Users\FOM018\Desktop\ERP_Project\Data\Silver\dev.duckdb"
+DB_PATH = "./data/Silver/dev.duckdb"
+# DB_PATH = r"C:\Users\FOM018\Desktop\ERP_Project\Data\Silver\dev.duckdb"
 st.set_page_config(page_title="ERP Dashboard", layout="wide")
 
-con = duckdb.connect(DB_PATH, read_only=True)
+con = duckdb.connect(DB_PATH, read_only=False)
 
 # First, show all schemas
 st.subheader("Available Schemas")

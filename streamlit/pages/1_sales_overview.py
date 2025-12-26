@@ -4,8 +4,9 @@ import pandas as pd
 import plotly.express as px
 
 # ---------------- DB CONNECTION ----------------
-DB_PATH = "C:/Users/FOM018/Desktop/ERP_Project/Data/Silver/dev.duckdb"
-con = duckdb.connect(DB_PATH, read_only=True)
+DB_PATH = "./data/Silver/dev.duckdb"
+# DB_PATH = "C:/Users/FOM018/Desktop/ERP_Project/Data/Silver/dev.duckdb"
+con = duckdb.connect(DB_PATH, read_only=False)
 
 st.set_page_config(page_title="Sales Current Trends", layout="wide")
 st.title("📈 Sales Order – Current Trends")
@@ -203,7 +204,7 @@ with b2:
         item_df,
         names="item_name",
         values="total_value",
-        title="🧁 Item Contribution to Total Sales",
+        title="Item Contribution to Total Sales",
         hole=0.4,
         color_discrete_sequence=px.colors.qualitative.Set3
     )
