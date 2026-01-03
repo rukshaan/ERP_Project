@@ -1,6 +1,7 @@
 import streamlit as st
 import duckdb
 from utils.sidebar import render_sidebar
+import plotly.express as px
 DB_PATH = "./data/Silver/dev.duckdb"
 # DB_PATH = r"C:\Users\FOM018\Desktop\ERP_Project\Data\Silver\dev.duckdb"
 st.set_page_config(page_title="ERP Dashboard", layout="wide")
@@ -37,3 +38,4 @@ df = con.execute("""
 st.title("ERP Dashboard")
 # st.write(f"Retrieved {len(df)} rows from main_prod.fact_final_joined_files")
 st.dataframe(df)
+

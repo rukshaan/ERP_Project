@@ -7,14 +7,14 @@ con = duckdb.connect(DB_PATH, read_only=False)
 
 
 def render_sidebar():
-    st.sidebar.header("🔍 Filters")
+    
 
     # =================== DATE RANGE ===================
     st.sidebar.subheader("📅 Date Range")
 
     min_max_query = """
         SELECT MIN(order_date) AS min_date,
-               MAX(order_date) AS max_date
+               MAX(delivery_date) AS max_date
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
     """

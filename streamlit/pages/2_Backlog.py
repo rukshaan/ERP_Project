@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 from datetime import datetime
 from utils.sidebar import render_sidebar  # Your global sidebar
+from streamlit_plotly_events import plotly_events
 
 st.set_page_config(layout="wide")
 # =================== DB CONNECTION ===================
@@ -198,31 +199,75 @@ with tab3:
 st.header("📋 Detailed Open Orders")
 
 sort_options = {
+    # 📅 Delivery
     "Delivery Date (Ascending)": "f.delivery_date ASC",
     "Delivery Date (Descending)": "f.delivery_date DESC",
+    "Days Until Delivery (Soonest First)": "days_until_delivery ASC",
+    "Days Until Delivery (Latest First)": "days_until_delivery DESC",
+
+    # 💰 Value
     "Order Value (High to Low)": "pending_amount DESC",
     "Order Value (Low to High)": "pending_amount ASC",
-    "Customer Name": "c.customer_name ASC"
+
+    # 📦 Quantity
+    "Pending Qty (High to Low)": "f.open_qty DESC",
+    "Pending Qty (Low to High)": "f.open_qty ASC",
+
+    # 👤 Customer
+    "Customer Name (A → Z)": "c.customer_name ASC",
+    "Customer Name (Z → A)": "c.customer_name DESC",
+
+    # 🧾 Order
+    "Order Date (Newest First)": "f.order_date DESC",
+    "Order Date (Oldest First)": "f.order_date ASC",
+    "Sales Order ID": "f.sales_order_id ASC",
+
+    # 🚦 Status Priority (Business Logic)
+    "Delivery Status (Overdue → Urgent → On Track)": """
+        CASE 
+            WHEN f.delivery_date < CURRENT_DATE THEN 1
+            WHEN f.delivery_date <= DATE_ADD(CURRENT_DATE, 3) THEN 2
+            ELSE 3
+        END ASC
+    """,
+
+    # ⭐ Smart default
+    "Priority View (Status → Delivery → Value)": """
+        CASE 
+            WHEN f.delivery_date < CURRENT_DATE THEN 1
+            WHEN f.delivery_date <= DATE_ADD(CURRENT_DATE, 3) THEN 2
+            ELSE 3
+        END,
+        f.delivery_date ASC,
+        pending_amount DESC
+    """
 }
+
 sort_by = st.selectbox("Sort Table By:", options=list(sort_options.keys()), index=0)
 
 table_query = f"""
-SELECT f.sales_order_id, c.customer_name, i.item_name,
-       f.qty AS ordered_qty, f.open_qty AS pending_qty, f.rate,
-       (f.open_qty * f.rate) AS pending_amount,
-       f.order_date, f.delivery_date,
-       DATEDIFF('day', CURRENT_DATE, f.delivery_date) AS days_until_delivery,
-       CASE 
-         WHEN f.delivery_date < CURRENT_DATE THEN 'Overdue'
-         WHEN f.delivery_date <= DATE_ADD(CURRENT_DATE, 3) THEN 'Urgent'
-         ELSE 'On Track'
-       END AS delivery_status
+SELECT f.sales_order_id, 
+    c.customer_name, 
+    i.item_name,
+    f.qty AS ordered_qty, 
+    f.open_qty AS pending_qty, 
+    f.rate,
+    (f.open_qty * f.rate) AS pending_amount,
+    f.order_date, 
+    f.delivery_date,
+    DATEDIFF('day', 
+    CURRENT_DATE, 
+    f.delivery_date) AS days_until_delivery,
+    CASE 
+        WHEN f.delivery_date < CURRENT_DATE THEN 'Overdue'
+        WHEN f.delivery_date <= DATE_ADD(CURRENT_DATE, 3) THEN 'Urgent'
+        ELSE 'On Track'
+    END AS delivery_status
 FROM main_prod.fact_final_joined_files f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}
 ORDER BY {sort_options[sort_by]}
-LIMIT 500
 """
 table_df = con.execute(table_query).df()
 
@@ -239,7 +284,7 @@ if not table_df.empty:
         else: return 'background-color: #d4edda; color: #155724'
 
     styled_df = display_df.style.applymap(color_status, subset=['delivery_status'])
-    st.metric("Total Records Displayed", len(display_df))
+
     st.dataframe(styled_df, use_container_width=True, height=400)
 
     csv = table_df.to_csv(index=False).encode('utf-8')
@@ -251,6 +296,175 @@ if not table_df.empty:
     )
 else:
     st.success("🎉 No open orders found with the current filters!")
+
+
+df = con.execute("""
+    SELECT order_date, sales_order_id, order_status, amount
+    FROM main_prod.fact_final_joined_files
+    ORDER BY order_date DESC
+""").df()
+# --- Chart: Order Status vs Number of Orders ---
+st.subheader("Order Status Distribution")
+
+# Count unique sales_order_id per order_status
+status_counts = df.groupby("order_status")["sales_order_id"].nunique().reset_index()
+status_counts.rename(columns={"sales_order_id": "num_orders"}, inplace=True)
+
+# Plot
+fig = px.bar(
+    status_counts,
+    x="order_status",
+    y="num_orders",
+    color="order_status",
+    text="num_orders",
+    title="Number of Unique Sales Orders by Order Status"
+)
+fig.update_layout(xaxis_title="Order Status", yaxis_title="Number of Orders", showlegend=False)
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+# -------------------------------
+# PAGE SETUP
+# -------------------------------
+st.subheader("📈 Sales Orders Over Time by Status")
+
+# -------------------------------
+# REQUIRED DATAFRAME
+# Columns:
+# sales_order_id | order_date | order_status
+# -------------------------------
+
+df["order_date"] = pd.to_datetime(df["order_date"])
+
+# -------------------------------
+# STATUS FILTER
+# -------------------------------
+order_statuses = sorted(df["order_status"].unique().tolist())
+
+selected_status = st.selectbox(
+    "Select Order Status",
+    ["All"] + order_statuses
+)
+
+# -------------------------------
+# BASE FILTER (CHART + TABLE)
+# -------------------------------
+if selected_status == "All":
+    df_filtered = df.copy()
+    title = "Daily Orders for All Statuses"
+else:
+    df_filtered = df[df["order_status"] == selected_status].copy()
+    title = f"Daily Orders for - {selected_status}"
+
+# -------------------------------
+# AGGREGATION (CHART)
+# -------------------------------
+agg = (
+    df_filtered
+    .groupby(["order_date", "order_status"])
+    .agg(
+        num_orders=("sales_order_id", "nunique"),
+        order_ids=("sales_order_id", lambda x: list(x.unique()))
+    )
+    .reset_index()
+)
+
+# -------------------------------
+# LINE CHART
+# -------------------------------
+fig = px.line(
+    agg,
+    x="order_date",
+    y="num_orders",
+    color="order_status" if selected_status == "All" else None,
+    markers=True,
+    title=title
+)
+
+fig.update_layout(
+    xaxis_title="Order Date",
+    yaxis_title="Number of Orders",
+    hovermode="closest"
+)
+
+# -------------------------------
+# CLICK EVENT
+# -------------------------------
+selected_points = plotly_events(
+    fig,
+    click_event=True,
+    hover_event=False,
+    select_event=False,
+    override_height=500,
+    override_width="100%"
+)
+
+st.markdown("👆 **Click any data point to drill down**")
+
+# -------------------------------
+# TABLE DATA (DEDUPLICATED)
+# -------------------------------
+table_df = (
+    df_filtered
+    .sort_values("order_date")
+    .drop_duplicates(subset=["sales_order_id"])
+)
+
+order_count = table_df["sales_order_id"].nunique()
+
+# -------------------------------
+# TABLE HEADER WITH COUNT
+# -------------------------------
+status_label = "All Statuses" if selected_status == "All" else selected_status
+st.subheader(f"📋 Order Details ({status_label}) - {order_count} Orders")
+
+st.dataframe(
+    table_df[["sales_order_id", "order_date", "order_status"]],
+    use_container_width=True
+)
+
+# -------------------------------
+# DRILL-DOWN TABLE (ON CLICK)
+# -------------------------------
+if selected_points:
+    clicked = selected_points[0]
+    clicked_date = pd.to_datetime(clicked["x"]).date()
+
+    if selected_status == "All":
+        status = agg["order_status"].unique()[clicked["curveNumber"]]
+    else:
+        status = selected_status
+
+    drill_df = (
+        table_df[
+            (table_df["order_date"].dt.date == clicked_date) &
+            (table_df["order_status"] == status)
+        ]
+        .drop_duplicates(subset=["sales_order_id"])
+    )
+
+    st.markdown("### 🔍 Drill-down: Clicked Point Orders")
+
+    st.success(
+        f"📅 Date: {clicked_date} | 🏷 Status: {status} | 📦 Orders: {drill_df.shape[0]}"
+    )
+
+    st.dataframe(
+        drill_df[["sales_order_id", "order_date", "order_status"]],
+        use_container_width=True
+    )
+
+    csv = drill_df.to_csv(index=False)
+    st.download_button(
+        "⬇ Download Drill-down Orders (CSV)",
+        csv,
+        file_name=f"orders_{status}_{clicked_date}.csv",
+        mime="text/csv"
+    )
+
+
 
 # =================== SUMMARY STATISTICS ===================
 if not table_df.empty:
