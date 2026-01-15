@@ -2,31 +2,41 @@ import streamlit as st
 import duckdb
 from datetime import datetime, timedelta
 
-DB_PATH = "./data/Silver/dev.duckdb"
-con = duckdb.connect(DB_PATH, read_only=False)
-
 
 def render_sidebar():
-    
+    # 🔒 Hide sidebar if not authenticated
+    if not st.session_state.get("authenticated"):
+        return None
 
-    # =================== DATE RANGE ===================
+    # =================== COOKIE MANAGER ===================
+    from utils.cookies import get_cookies
+
+    cookies = get_cookies()
+    if not cookies.ready():
+        st.stop()
+
+    # =================== DATABASE ===================
+    DB_PATH = "./data/Silver/dev.duckdb"
+    con = duckdb.connect(DB_PATH, read_only=False)
+
+    st.sidebar.title("📊 ERP Dashboard")
+
+    # ==================================================
+    # 📅 DATE RANGE
+    # ==================================================
     st.sidebar.subheader("📅 Date Range")
 
-    min_max_query = """
+    date_df = con.execute("""
         SELECT MIN(order_date) AS min_date,
                MAX(delivery_date) AS max_date
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
-    """
-    date_range = con.execute(min_max_query).df()
+    """).df()
 
-    min_date_db = date_range["min_date"][0] if not date_range.empty else None
-    max_date_db = date_range["max_date"][0] if not date_range.empty else None
+    min_date = date_df["min_date"][0].date()
+    max_date = date_df["max_date"][0].date()
 
-    min_date = min_date_db.date() if min_date_db else (datetime.now() - timedelta(days=365)).date()
-    max_date = max_date_db.date() if max_date_db else datetime.now().date()
-
-    # =================== INITIALIZE SESSION (ONCE) ===================
+    # Initialize session values once
     if "initialized" not in st.session_state:
         st.session_state.start_date = min_date
         st.session_state.end_date = max_date
@@ -37,92 +47,102 @@ def render_sidebar():
         st.session_state.so_search = ""
         st.session_state.initialized = True
 
-    date_cols = st.sidebar.columns(2)
-    with date_cols[0]:
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
         st.session_state.start_date = st.date_input(
-            "From Date",
-            value=st.session_state.start_date,
+            "From",
+            st.session_state.start_date,
             min_value=min_date,
             max_value=max_date
         )
-
-    with date_cols[1]:
+    with col2:
         st.session_state.end_date = st.date_input(
-            "To Date",
-            value=st.session_state.end_date,
+            "To",
+            st.session_state.end_date,
             min_value=min_date,
             max_value=max_date
         )
 
-    # =================== CUSTOMERS ===================
+    # ==================================================
+    # 👥 CUSTOMERS
+    # ==================================================
     st.sidebar.subheader("👥 Customers")
 
-    customer_query = """
+    customers = con.execute("""
         SELECT DISTINCT customer_name
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
         ORDER BY customer_name
-    """
-    customers_df = con.execute(customer_query).df()
-    all_customers = customers_df["customer_name"].tolist() if not customers_df.empty else []
+    """).df()["customer_name"].tolist()
 
     st.session_state.selected_customers = st.sidebar.multiselect(
         "Select Customers",
-        options=all_customers,
-        default=st.session_state.selected_customers,
-        help="Leave empty to show all customers"
+        customers,
+        st.session_state.selected_customers
     )
 
-    # =================== ITEMS ===================
+    # ==================================================
+    # 📦 ITEMS
+    # ==================================================
     st.sidebar.subheader("📦 Items")
 
-    item_query = """
+    items = con.execute("""
         SELECT DISTINCT item_name
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
         ORDER BY item_name
-    """
-    items_df = con.execute(item_query).df()
-    all_items = items_df["item_name"].tolist() if not items_df.empty else []
+    """).df()["item_name"].tolist()
 
     st.session_state.selected_items = st.sidebar.multiselect(
         "Select Items",
-        options=all_items,
-        default=st.session_state.selected_items,
-        help="Leave empty to show all items"
+        items,
+        st.session_state.selected_items
     )
 
-    # =================== DELIVERY STATUS ===================
-    # st.sidebar.subheader("🚚 Delivery Status")
+    # ==================================================
+    # 🚚 DELIVERY STATUS
+    # ==================================================
+    st.sidebar.subheader("🚚 Delivery Status")
 
-    # status_options = ["All", "On Time", "Overdue", "Upcoming", "Urgent (< 3 days)"]
+    delivery_options = [
+        "All",
+        "On Time",
+        "Overdue",
+        "Upcoming",
+        "Urgent (< 3 days)"
+    ]
 
-    # st.session_state.delivery_status = st.sidebar.selectbox(
-    #     "Filter by Delivery Status",
-    #     options=status_options,
-    #     index=status_options.index(st.session_state.delivery_status)
-    # )
+    st.session_state.delivery_status = st.sidebar.selectbox(
+        "Delivery Status",
+        delivery_options,
+        delivery_options.index(st.session_state.delivery_status)
+    )
 
-    # =================== MIN VALUE ===================
-    st.sidebar.subheader("💰 Value Threshold")
+    # ==================================================
+    # 💰 MIN VALUE
+    # ==================================================
+    st.sidebar.subheader("💰 Minimum Order Value")
 
     st.session_state.min_value = st.sidebar.number_input(
-        "Minimum Order Value (₹)",
+        "Min Value (₹)",
         min_value=0,
-        value=st.session_state.min_value,
-        step=1000
+        step=1000,
+        value=st.session_state.min_value
     )
 
-    # =================== SALES ORDER SEARCH ===================
-    st.sidebar.subheader("📄 Order Search")
+    # ==================================================
+    # 📄 SALES ORDER SEARCH
+    # ==================================================
+    st.sidebar.subheader("📄 Sales Order Search")
 
     st.session_state.so_search = st.sidebar.text_input(
-        "Search by Sales Order ID",
-        value=st.session_state.so_search,
-        placeholder="Enter order ID..."
+        "Sales Order ID",
+        st.session_state.so_search
     )
 
-    # =================== CLEAR ALL FILTERS ===================
+    # ==================================================
+    # 🔄 CLEAR FILTERS
+    # ==================================================
     if st.sidebar.button("🔄 Clear All Filters"):
         st.session_state.start_date = min_date
         st.session_state.end_date = max_date
@@ -132,7 +152,20 @@ def render_sidebar():
         st.session_state.min_value = 0
         st.session_state.so_search = ""
 
-    # =================== RETURN FILTERS ===================
+    st.sidebar.divider()
+
+    # ==================================================
+    # 🚪 LOGOUT
+    # ==================================================
+    from login import logout
+
+    if st.sidebar.button("🚪 Logout"):
+        logout()
+
+
+    # ==================================================
+    # 🔁 RETURN FILTERS (CONTRACT)
+    # ==================================================
     return {
         "start_date": st.session_state.start_date,
         "end_date": st.session_state.end_date,

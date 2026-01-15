@@ -2,12 +2,28 @@ import streamlit as st
 import duckdb
 from utils.sidebar import render_sidebar
 import plotly.express as px
-DB_PATH = "./data/Silver/dev.duckdb"
-# DB_PATH = r"C:\Users\FOM018\Desktop\ERP_Project\Data\Silver\dev.duckdb"
+
+from login import render_login
+
+
 st.set_page_config(page_title="ERP Dashboard", layout="wide")
 
+# Init auth state
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
 
-render_sidebar()
+# 🔒 NOT LOGGED IN → SHOW LOGIN ONLY
+if not st.session_state.authenticated:
+    render_login()
+    st.stop()
+    st.write("SESSION:", st.session_state)
+DB_PATH = "./data/Silver/dev.duckdb"
+# DB_PATH = r"C:\Users\FOM018\Desktop\ERP_Project\Data\Silver\dev.duckdb"
+
+
+
+# ✅ LOGGED IN → DASHBOARD
+filters = render_sidebar()
 
 con = duckdb.connect(DB_PATH, read_only=False)
 

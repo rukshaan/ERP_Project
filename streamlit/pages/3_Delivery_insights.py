@@ -4,9 +4,16 @@ import pandas as pd
 import plotly.express as px
 from datetime import datetime
 from utils.sidebar import render_sidebar
+from login import render_login
+# =================== PAGE CONFIG ===================
+
 
 # =================== PAGE CONFIG ===================
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
+
+# 🔐 AUTH GUARD
+if not st.session_state.get("authenticated"):
+    st.switch_page("app.py")
 
 # =================== DB CONNECTION ===================
 DB_PATH = "./data/Silver/dev.duckdb"
