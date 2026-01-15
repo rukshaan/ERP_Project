@@ -9,11 +9,12 @@ from login import render_login
 
 
 # =================== PAGE CONFIG ===================
-# st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
 # 🔐 AUTH GUARD
-if not st.session_state.get("authenticated"):
-    st.switch_page("app.py")
+if not st.session_state.get("authenticated", False):
+    render_login()
+    st.stop()
 
 # =================== DB CONNECTION ===================
 DB_PATH = "./data/Silver/dev.duckdb"

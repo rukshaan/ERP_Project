@@ -9,9 +9,12 @@ def render_sidebar():
         return None
 
     # =================== COOKIE MANAGER ===================
-    from utils.cookies import get_cookies
+    from streamlit_cookies_manager import EncryptedCookieManager
+    cookies = EncryptedCookieManager(
+        prefix="my_app",
+        password="secret_key_2026!"
+    )
 
-    cookies = get_cookies()
     if not cookies.ready():
         st.stop()
 

@@ -1,12 +1,10 @@
 import streamlit as st
 from utils.erp import Connect
-from utils.cookies import get_cookies
+from streamlit_cookies_manager import EncryptedCookieManager
 
 
-# --------------------------------------------------
-# Initialize session state safely
-# --------------------------------------------------
 def init_session():
+    """Initialize session state safely"""
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
     if "user" not in st.session_state:
@@ -15,46 +13,20 @@ def init_session():
         st.session_state.erp_conn = None
 
 
-# --------------------------------------------------
-# Render Login Page
-# --------------------------------------------------
 def render_login():
     init_session()
-    cookies = get_cookies()
+    
+    cookies = EncryptedCookieManager(
+        prefix="erp_dashboard",
+        password="super-secret-key"  # 🔐 move to env later
+    )
 
-    # ⏳ WAIT until cookies are ready
-    if not cookies.ready():
-        st.info("🔄 Initializing authentication...")
-        st.stop()
-
-    # 🔁 AUTO LOGIN
-    if not st.session_state.authenticated:
-        cookie_user = cookies.get("user", None)
-        cookie_sid = cookies.get("session_id", None)
-
-        if cookie_user and cookie_sid:
-            conn = Connect(session_id=cookie_sid)
-            try:
-                res = conn.session.get(
-                    f"{conn.host}/method/frappe.auth.get_logged_user"
-                )
-                if res.status_code == 200:
-                    st.session_state.authenticated = True
-                    st.session_state.user = cookie_user
-                    st.session_state.erp_conn = conn
-                    st.rerun()
-            except Exception:
-                cookies.clear()
-                cookies.save()
-
-    if st.session_state.authenticated:
-        return
-
-    # 🔐 LOGIN FORM
+    
+    # 🔐 Login UI
     st.title("🔐 ERP Login")
     st.markdown("Please sign in to access the dashboard")
 
-    with st.form("login_form"):
+    with st.form("login_form", clear_on_submit=False):
         username = st.text_input("ERP Username / Email")
         password = st.text_input("ERP Password", type="password")
         submitted = st.form_submit_button("Login")
@@ -67,36 +39,50 @@ def render_login():
         conn = Connect(username=username, password=password)
 
         if conn.auth_session:
+            # ✅ Session
             st.session_state.authenticated = True
-            st.session_state.user = username
             st.session_state.erp_conn = conn
+            st.session_state.user = username
 
+            # 🍪 Cookies
+            cookies["authenticated"] = "true"
             cookies["user"] = username
-            cookies["session_id"] = conn.auth_session
             cookies.save()
 
             st.success("✅ Login successful")
             st.rerun()
         else:
             st.error("❌ Invalid ERP credentials")
+    # ⏳ Wait until cookies are ready
+    if not cookies.ready():
+        st.info("🔄 Initializing authentication...")
+        st.stop()
 
-# --------------------------------------------------
-# Logout
-# --------------------------------------------------
+    # 🔁 Auto-login from cookie (safe)
+    if (
+        cookies.get("authenticated") == "true"
+        and not st.session_state.authenticated
+    ):
+        st.session_state.authenticated = True
+        st.session_state.user = cookies.get("user")
+        st.rerun()
+
+
+
 def logout():
-    cookies = get_cookies()
-
-    if st.session_state.get("erp_conn"):
-        try:
-            st.session_state.erp_conn.logout()
-        except Exception:
-            pass
+    """Optional logout helper (use later)"""
+    cookies = EncryptedCookieManager(
+        prefix="erp_dashboard",
+        password="super-secret-key"
+    )
 
     if cookies.ready():
-        cookies.clear()
+        cookies["authenticated"] = "false"
+        cookies["user"] = ""
         cookies.save()
 
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
+    for key in ["authenticated", "user", "erp_conn"]:
+        if key in st.session_state:
+            del st.session_state[key]
 
     st.rerun()

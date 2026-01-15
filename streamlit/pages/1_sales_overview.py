@@ -6,13 +6,14 @@ import plotly.graph_objects as go
 from utils.sidebar import render_sidebar
 from datetime import datetime
 from login import render_login
-
 # =================== PAGE CONFIG ===================
-# st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
 # =================== AUTH GUARD ===================
-if not st.session_state.get("authenticated"):
-    st.switch_page("app.py")
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    render_login()
+    st.stop()
+
 
 
 # =================== SIDEBAR FILTERS ===================

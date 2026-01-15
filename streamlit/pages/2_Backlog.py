@@ -9,10 +9,10 @@ from login import render_login
 
 
 # 🔐 AUTH GUARD (COOKIE + SESSION BASED)
-if not st.session_state.get("authenticated"):
-    st.switch_page("app.py")
-# st.set_page_config(layout="wide")
-
+if not st.session_state.get("authenticated", False):
+    render_login()   # show login page
+    st.stop()        # 🚨 STOP loading dashboard
+st.set_page_config(layout="wide")
 # =================== DB CONNECTION ===================
 DB_PATH = "./data/Silver/dev.duckdb"
 con = duckdb.connect(DB_PATH, read_only=False)
