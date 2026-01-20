@@ -3,25 +3,28 @@ import duckdb
 import pandas as pd
 import plotly.express as px
 from datetime import datetime
-from utils.sidebar import render_sidebar  # Your global sidebar
+
+from utils.auth import require_auth      # ✅ unified auth
+from utils.sidebar import render_sidebar
 from streamlit_plotly_events import plotly_events
-from login import render_login
 
-
-# 🔐 AUTH GUARD (COOKIE + SESSION BASED)
-if not st.session_state.get("authenticated", False):
-    render_login()   # show login page
-    st.stop()        # 🚨 STOP loading dashboard
 st.set_page_config(layout="wide")
+
+# =================== AUTH GUARD ===================
+require_auth()   # 🔐 restores session from cookies
+
 # =================== DB CONNECTION ===================
 DB_PATH = "./data/Silver/dev.duckdb"
-con = duckdb.connect(DB_PATH, read_only=False)
+con = duckdb.connect(DB_PATH, read_only=True)
 
 # =================== PAGE TITLE ===================
 st.title("📋 Backlog / Open Orders Dashboard")
 
 # =================== LOAD FILTERS ===================
 filters = render_sidebar()
+if filters is None:
+    st.stop()
+
 start_date = filters["start_date"]
 end_date = filters["end_date"]
 selected_customers = filters["customers"]

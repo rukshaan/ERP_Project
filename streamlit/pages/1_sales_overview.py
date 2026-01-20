@@ -2,19 +2,16 @@ import streamlit as st
 import duckdb
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
-from utils.sidebar import render_sidebar
 from datetime import datetime
-from login import render_login
+
+from utils.auth import require_auth   # ✅ unified auth guard
+from utils.sidebar import render_sidebar
+
 # =================== PAGE CONFIG ===================
 st.set_page_config(layout="wide")
 
 # =================== AUTH GUARD ===================
-if "authenticated" not in st.session_state or not st.session_state.authenticated:
-    render_login()
-    st.stop()
-
-
+require_auth()   # 🔐 restores session from cookies on refresh
 
 # =================== SIDEBAR FILTERS ===================
 filters = render_sidebar()
@@ -31,7 +28,7 @@ so_search = filters["so_search"]
 
 # =================== DB CONNECTION ===================
 DB_PATH = "./data/Silver/dev.duckdb"
-con = duckdb.connect(DB_PATH, read_only=False)
+con = duckdb.connect(DB_PATH, read_only=True)
 
 # =================== TITLE ===================
 st.title("📈 Sales Order – Current Trends")
@@ -141,13 +138,11 @@ LIMIT 10
 """
 customer_df = con.execute(customer_query).df()
 
-fig_customers = px.bar(
-    customer_df,
-    x="customer_name",
-    y="total_value",
-    title="Top Customers by Sales Value"
+st.plotly_chart(
+    px.bar(customer_df, x="customer_name", y="total_value",
+           title="Top Customers by Sales Value"),
+    use_container_width=True
 )
-st.plotly_chart(fig_customers, use_container_width=True)
 
 # =================== TOP ITEMS ===================
 st.subheader("📦 Top Items")
@@ -165,22 +160,15 @@ LIMIT 10
 item_df = con.execute(item_query).df()
 
 c1, c2 = st.columns(2)
-
 with c1:
     st.plotly_chart(
         px.bar(item_df, x="item_name", y="total_value", title="Top Items by Sales"),
         use_container_width=True
     )
-
 with c2:
     st.plotly_chart(
-        px.pie(
-            item_df,
-            names="item_name",
-            values="total_value",
-            title="Item Contribution",
-            hole=0.4
-        ),
+        px.pie(item_df, names="item_name", values="total_value",
+               title="Item Contribution", hole=0.4),
         use_container_width=True
     )
 
@@ -202,5 +190,7 @@ JOIN main_prod.dim_item i ON f.item_code = i.item_code
 ORDER BY f.order_date DESC
 """
 orders_df = con.execute(orders_query).df()
+
 st.dataframe(orders_df, use_container_width=True)
-# =================== CUSTOMER DRILL-DOWN ===================
+
+con.close()

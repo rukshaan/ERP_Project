@@ -1,45 +1,45 @@
+# utils/sidebar.py
 import streamlit as st
 import duckdb
 from datetime import datetime, timedelta
+from utils.auth import logout   # ✅ unified logout
+
+DB_PATH = "./data/Silver/dev.duckdb"
 
 
 def render_sidebar():
-    # 🔒 Hide sidebar if not authenticated
-    if not st.session_state.get("authenticated"):
+
+    # 🔒 AUTH GUARD (DO NOT REMOVE)
+    if not st.session_state.get("authenticated", False):
         return None
 
-    # =================== COOKIE MANAGER ===================
-    from streamlit_cookies_manager import EncryptedCookieManager
-    cookies = EncryptedCookieManager(
-        prefix="my_app",
-        password="secret_key_2026!"
-    )
-
-    if not cookies.ready():
-        st.stop()
-
-    # =================== DATABASE ===================
-    DB_PATH = "./data/Silver/dev.duckdb"
-    con = duckdb.connect(DB_PATH, read_only=False)
-
     st.sidebar.title("📊 ERP Dashboard")
+
+    # ================= DB CONNECTION (SAFE) =================
+    con = duckdb.connect(DB_PATH, read_only=True)
 
     # ==================================================
     # 📅 DATE RANGE
     # ==================================================
     st.sidebar.subheader("📅 Date Range")
 
-    date_df = con.execute("""
+    min_max_query = """
         SELECT MIN(order_date) AS min_date,
                MAX(delivery_date) AS max_date
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
-    """).df()
+    """
+    date_range = con.execute(min_max_query).df()
 
-    min_date = date_df["min_date"][0].date()
-    max_date = date_df["max_date"][0].date()
+    min_date_db = date_range["min_date"][0] if not date_range.empty else None
+    max_date_db = date_range["max_date"][0] if not date_range.empty else None
 
-    # Initialize session values once
+    min_date = min_date_db.date() if min_date_db else (datetime.now() - timedelta(days=365)).date()
+    max_date = max_date_db.date() if max_date_db else datetime.now().date()
+
+    # ==================================================
+    # 🧠 SESSION INIT (ONCE)
+    # ==================================================
     if "initialized" not in st.session_state:
         st.session_state.start_date = min_date
         st.session_state.end_date = max_date
@@ -53,15 +53,16 @@ def render_sidebar():
     col1, col2 = st.sidebar.columns(2)
     with col1:
         st.session_state.start_date = st.date_input(
-            "From",
-            st.session_state.start_date,
+            "From Date",
+            value=st.session_state.start_date,
             min_value=min_date,
             max_value=max_date
         )
+
     with col2:
         st.session_state.end_date = st.date_input(
-            "To",
-            st.session_state.end_date,
+            "To Date",
+            value=st.session_state.end_date,
             min_value=min_date,
             max_value=max_date
         )
@@ -71,17 +72,17 @@ def render_sidebar():
     # ==================================================
     st.sidebar.subheader("👥 Customers")
 
-    customers = con.execute("""
+    customers_df = con.execute("""
         SELECT DISTINCT customer_name
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
         ORDER BY customer_name
-    """).df()["customer_name"].tolist()
+    """).df()
 
     st.session_state.selected_customers = st.sidebar.multiselect(
         "Select Customers",
-        customers,
-        st.session_state.selected_customers
+        options=customers_df["customer_name"].tolist(),
+        default=st.session_state.selected_customers
     )
 
     # ==================================================
@@ -89,58 +90,39 @@ def render_sidebar():
     # ==================================================
     st.sidebar.subheader("📦 Items")
 
-    items = con.execute("""
+    items_df = con.execute("""
         SELECT DISTINCT item_name
         FROM main_prod.fact_final_joined_files
         WHERE open_qty > 0
         ORDER BY item_name
-    """).df()["item_name"].tolist()
+    """).df()
 
     st.session_state.selected_items = st.sidebar.multiselect(
         "Select Items",
-        items,
-        st.session_state.selected_items
+        options=items_df["item_name"].tolist(),
+        default=st.session_state.selected_items
     )
 
     # ==================================================
-    # 🚚 DELIVERY STATUS
+    # 💰 VALUE FILTER
     # ==================================================
-    st.sidebar.subheader("🚚 Delivery Status")
-
-    delivery_options = [
-        "All",
-        "On Time",
-        "Overdue",
-        "Upcoming",
-        "Urgent (< 3 days)"
-    ]
-
-    st.session_state.delivery_status = st.sidebar.selectbox(
-        "Delivery Status",
-        delivery_options,
-        delivery_options.index(st.session_state.delivery_status)
-    )
-
-    # ==================================================
-    # 💰 MIN VALUE
-    # ==================================================
-    st.sidebar.subheader("💰 Minimum Order Value")
+    st.sidebar.subheader("💰 Value Threshold")
 
     st.session_state.min_value = st.sidebar.number_input(
-        "Min Value (₹)",
+        "Minimum Order Value (₹)",
         min_value=0,
-        step=1000,
-        value=st.session_state.min_value
+        value=st.session_state.min_value,
+        step=1000
     )
 
     # ==================================================
-    # 📄 SALES ORDER SEARCH
+    # 📄 ORDER SEARCH
     # ==================================================
-    st.sidebar.subheader("📄 Sales Order Search")
+    st.sidebar.subheader("📄 Order Search")
 
     st.session_state.so_search = st.sidebar.text_input(
-        "Sales Order ID",
-        st.session_state.so_search
+        "Search by Sales Order ID",
+        value=st.session_state.so_search
     )
 
     # ==================================================
@@ -160,14 +142,37 @@ def render_sidebar():
     # ==================================================
     # 🚪 LOGOUT
     # ==================================================
-    from login import logout
+    user_email = st.session_state.get("user", "Unknown User")
 
+    st.sidebar.markdown(
+        f"""
+        <div style="
+            padding: 8px 10px;
+            background-color: #f0f2f6;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 6px;
+        ">
+            👤 <strong>{user_email}</strong>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # ==================================================
+    # 🚪 LOGOUT
+    # =================================================
+        
     if st.sidebar.button("🚪 Logout"):
+        con.close()
         logout()
+        # 🔒 CLOSE DB (IMPORTANT)
+        con.close()
+        return logout()   # 🛑 STOP sidebar execution
 
 
     # ==================================================
-    # 🔁 RETURN FILTERS (CONTRACT)
+    # 🔁 RETURN FILTERS
     # ==================================================
     return {
         "start_date": st.session_state.start_date,
@@ -178,3 +183,4 @@ def render_sidebar():
         "min_value": st.session_state.min_value,
         "so_search": st.session_state.so_search,
     }
+
