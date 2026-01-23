@@ -173,36 +173,127 @@ with tab2:
         st.info("No item data available with current filters.")
 
 # ------------------- Trend Analysis -------------------
+# with tab3:
+#     trend_query = f"""
+#     SELECT DATE_TRUNC('month', f.order_date) AS month,
+#            COALESCE(SUM(f.open_qty * f.rate), 0) AS monthly_open_value,
+#            COALESCE(SUM(f.open_qty), 0) AS monthly_open_qty,
+#            COUNT(DISTINCT f.sales_order_id) AS monthly_order_count
+#     FROM main_prod.fact_final_joined_files f
+#     JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
+#     JOIN main_prod.dim_item i ON f.item_code = i.item_code
+#     WHERE {where_clause}
+#     GROUP BY DATE_TRUNC('month', f.order_date)
+#     ORDER BY month
+#     """
+#     trend_df = con.execute(trend_query).df()
+#     if not trend_df.empty:
+#         trend_df['month'] = pd.to_datetime(trend_df['month']).dt.strftime('%b %Y')
+#         fig_trend = px.line(
+#             trend_df, x='month', y='monthly_open_value',
+#             title="Open Order Value Trend by Month",
+#             labels={'monthly_open_value':'Open Value (₹)','month':'Month'},
+#             markers=True
+#         )
+#         fig_trend.add_bar(
+#             x=trend_df['month'], y=trend_df['monthly_order_count'],
+#             name='Order Count', yaxis='y2', opacity=0.3
+#         )
+#         fig_trend.update_layout(yaxis2=dict(title='Order Count', overlaying='y', side='right'))
+#         st.plotly_chart(fig_trend, use_container_width=True)
+#     else:
+#         st.info("No trend data available with current filters.")
+# ------------------- Trend Analysis -------------------
 with tab3:
+
+    st.subheader("Monthly Open Order Trend")
+
     trend_query = f"""
-    SELECT DATE_TRUNC('month', f.order_date) AS month,
-           COALESCE(SUM(f.open_qty * f.rate), 0) AS monthly_open_value,
-           COALESCE(SUM(f.open_qty), 0) AS monthly_open_qty,
-           COUNT(DISTINCT f.sales_order_id) AS monthly_order_count
+    SELECT 
+        DATE_TRUNC('month', f.order_date) AS month,
+        COALESCE(SUM(f.open_qty * f.rate), 0) AS monthly_open_value,
+        COALESCE(SUM(f.open_qty), 0) AS monthly_open_qty,
+        COUNT(DISTINCT f.sales_order_id) AS monthly_order_count
     FROM main_prod.fact_final_joined_files f
-    JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
-    JOIN main_prod.dim_item i ON f.item_code = i.item_code
+    JOIN main_prod.dim_customer c 
+        ON f.customer_name = c.customer_name
+    JOIN main_prod.dim_item i 
+        ON f.item_code = i.item_code
     WHERE {where_clause}
     GROUP BY DATE_TRUNC('month', f.order_date)
     ORDER BY month
     """
+
+    # Execute query
     trend_df = con.execute(trend_query).df()
+
     if not trend_df.empty:
+
+        # ---------------- Format Columns ----------------
         trend_df['month'] = pd.to_datetime(trend_df['month']).dt.strftime('%b %Y')
+
+        # Currency formatting
+        trend_df['monthly_open_value_fmt'] = trend_df['monthly_open_value'].map(
+            lambda x: f"₹{x:,.2f}"
+        )
+
+        # Rename columns for display
+        display_df = trend_df.rename(columns={
+            'month': 'Month',
+            'monthly_open_value_fmt': 'Open Value (₹)',
+            'monthly_open_qty': 'Open Quantity',
+            'monthly_order_count': 'Order Count'
+        })[['Month', 'Open Value (₹)', 'Open Quantity', 'Order Count']]
+
+        # ---------------- TABLE VIEW ----------------
+        st.markdown("### 📋 Monthly Trend Table")
+        st.dataframe(display_df, use_container_width=True)
+
+        # ---------------- CHART VIEW ----------------
         fig_trend = px.line(
-            trend_df, x='month', y='monthly_open_value',
+            trend_df,
+            x='month',
+            y='monthly_open_value',
             title="Open Order Value Trend by Month",
-            labels={'monthly_open_value':'Open Value (₹)','month':'Month'},
+            labels={
+                'monthly_open_value': 'Open Value (₹)',
+                'month': 'Month'
+            },
             markers=True
         )
+
+        # Add Order Count Bar Chart
         fig_trend.add_bar(
-            x=trend_df['month'], y=trend_df['monthly_order_count'],
-            name='Order Count', yaxis='y2', opacity=0.3
+            x=trend_df['month'],
+            y=trend_df['monthly_order_count'],
+            name='Order Count',
+            yaxis='y2',
+            opacity=0.3
         )
-        fig_trend.update_layout(yaxis2=dict(title='Order Count', overlaying='y', side='right'))
+
+        # Layout for dual axis
+        fig_trend.update_layout(
+            yaxis2=dict(
+                title='Order Count',
+                overlaying='y',
+                side='right'
+            ),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            )
+        )
+
         st.plotly_chart(fig_trend, use_container_width=True)
+
     else:
         st.info("No trend data available with current filters.")
+
+
+
 
 # =================== DETAILED TABLE ===================
 st.header("📋 Detailed Open Orders")

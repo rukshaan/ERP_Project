@@ -9,7 +9,7 @@ from airflow.operators.python import PythonOperator
 from tasks.transform_salesorder_to_silver import transform_salesorder_to_silver
 from tasks.task2 import transform_customer_to_silver
 from tasks.check_delta import check_schema
-
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 default_args = {
     "owner": "airflow",
     "retries": 1,
@@ -34,7 +34,13 @@ with DAG(
         task_id="transform_customer_to_silver",
         python_callable=transform_customer_to_silver,
     )
-    customer_task >> silver_task
+    trigger_third_dag = TriggerDagRunOperator(
+        task_id="trigger_Third_dag",
+        trigger_dag_id="dbt_transformation_dag",  # ✅ EXACT dag_id
+        reset_dag_run=True,
+        wait_for_completion=False,  # recommended
+    )
+    customer_task >> silver_task >> trigger_third_dag
 
     # schema_check = PythonOperator(
     #     task_id="check_schema_files",
