@@ -1,3 +1,6 @@
+-- STAGING LAYER: Sources from SNAPSHOT layer (SCD-2 historical data)
+-- Returns only current records (dbt_valid_to IS NULL) for incremental processing
+
 {{
     config(
         materialized='incremental',
@@ -6,6 +9,7 @@
 }}
 
 WITH source_data AS (
+    -- TEMP: Direct from Silver until snapshot is created
     SELECT *
     FROM delta_scan('/opt/airflow/data/Silver/delta/Customer')
 ),
@@ -27,17 +31,17 @@ max_loaded AS (
  
 
 SELECT
-    TRIM(CAST(customer_id AS VARCHAR)) AS customer_id,
-    COALESCE(customer, 'N/A') AS customer_name,
+    customer_id,
+    customer AS customer_name,
     COALESCE(customer_group, 'N/A') AS customer_group,
-    COALESCE(customer_type, 'N/A') AS customer_type,
-    COALESCE(territory, 'N/A') AS territory,  
-    COALESCE(customer_primary_address, 'N/A') AS customer_primary_address,
-    COALESCE(sales_team_sales_person, 'salesteam') AS salesteam, 
-    COALESCE(sales_team_name, 'N/A') AS sales_team_name, 
-    COALESCE(is_internal_customer, 1) AS is_internal_customer,
-    COALESCE(email_id, 'N/A') AS email_id,
-    COALESCE(mobile_no, 'N/A') AS mobile_no,
+    customer_type,
+    COALESCE(territory, 'N/A') AS territory,
+    customer_primary_address,
+    -- salesteam, 
+    sales_team_name, 
+    is_internal_customer,
+    email_id,
+    mobile_no,
     creation::date AS creation,
     modified::date AS modified_date
 

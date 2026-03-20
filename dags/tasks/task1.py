@@ -1,5 +1,5 @@
-from . import main
 import os
+import sys
 import json
 from datetime import datetime
 from pyspark.sql import SparkSession
@@ -8,22 +8,64 @@ import pandas as pd
 from delta import configure_spark_with_delta_pip, DeltaTable
 import pyspark.sql.functions as F
 
+# Handle Airflow import issue - add dags directory to path
+dags_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if dags_dir not in sys.path:
+    sys.path.insert(0, dags_dir)
+
+from tasks import main
+
 
 def get_sales_data_bronze_dag(**kwargs):
 
     # ----------------------------------------------------------
     # 1. Configure Spark Session (FIXED VERSION)
     # ----------------------------------------------------------
-    builder = (
-        SparkSession.builder
-        .appName("BronzeMultiDoctype")
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-        .config("spark.driver.memory", "2g")
-        .config("spark.executor.memory", "2g")
-        .config("spark.sql.warehouse.dir", "/opt/airflow/data/warehouse")
-    )
     
+    # Check if Delta JARs exist
+    import os
+    jar_paths = [
+        "/opt/spark/jars/delta-spark.jar",
+        "/opt/spark/jars/delta-storage.jar"
+    ]
+    
+    # antrl4-runtime is optional
+    optional_jars = ["/opt/spark/jars/antlr4-runtime.jar"]
+    
+    missing_jars = [jar for jar in jar_paths if not os.path.exists(jar)]
+    if missing_jars:
+        print(f"⚠️  Warning: Missing required JARs: {missing_jars}")
+        # Fallback to pip-installed delta-spark
+        builder = (
+            SparkSession.builder
+            .appName("BronzeMultiDoctype")
+            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+            .config("spark.driver.memory", "2g")
+            .config("spark.executor.memory", "2g")
+            .config("spark.sql.warehouse.dir", "/opt/airflow/data/warehouse")
+        )
+    else:
+        print(f"✅ Found required Delta JARs: {jar_paths}")
+        jar_string = ",".join(jar_paths)
+        
+        # Add optional JARs if they exist
+        existing_optional = [jar for jar in optional_jars if os.path.exists(jar)]
+        if existing_optional:
+            jar_string += "," + ",".join(existing_optional)
+            print(f"✅ Also found optional JARs: {existing_optional}")
+        
+        builder = (
+            SparkSession.builder
+            .appName("BronzeMultiDoctype")
+            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+            # Add JARs to Spark classpath
+            .config("spark.jars", jar_string)
+            .config("spark.driver.memory", "2g")
+            .config("spark.executor.memory", "2g")
+            .config("spark.sql.warehouse.dir", "/opt/airflow/data/warehouse")
+        )
     # Use configure_spark_with_delta_pip BEFORE getOrCreate
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
     
@@ -36,7 +78,7 @@ def get_sales_data_bronze_dag(**kwargs):
     # ----------------------------------------------------------
     today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     api = main.API()
-    doctypes = ["Sales Order", "Customer"]
+    doctypes = ["Sales Order", "Customer","Item","Sales Invoice","Quotation"]
     run_id = kwargs["run_id"]
 
     # Base data folders

@@ -32,4 +32,4 @@ models:
       +schema: prod
     snapshots:
       +materialized: table
-      +schema: prod
+      +schema: dev

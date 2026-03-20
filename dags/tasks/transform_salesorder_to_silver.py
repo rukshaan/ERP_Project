@@ -85,34 +85,7 @@ def transform_salesorder_to_silver(**kwargs):
         )
     )
 
-    # -------------------------------------
-    # 5. SILVER HEADER TABLE
-    # -------------------------------------
-    # silver_header_df = expanded_df.select(
-    #     F.col("so.name").alias("sales_order_id"),
-    #     F.col("so.customer").alias("customer"),
-    #     F.col("so.transaction_date").alias("order_date"),
-    #     F.col("so.delivery_date").alias("delivery_date"),
-    #     F.col("so.status").alias("status"),
-    #     F.col("so.company").alias("company"),
-    #     F.col("so.grand_total").alias("grand_total"),
-    #     F.col("so.currency").alias("currency"),
-    #     "batchid", "creationdate", "md5"
-    # )
 
-    # (
-    #     silver_header_df
-    #     .write.format("delta")
-    #     .mode("overwrite")
-    #     .option("overwriteSchema", "true")
-    #     .save(silver_header_path)
-    # )
-
-    # print(f"Silver SalesOrderHeader written → {silver_header_path}")
-
-    # -------------------------------------
-    # 6. SILVER ITEMS TABLE (one row per item)
-    # -------------------------------------
     silver_items_df = (
         expanded_df
         .select(
@@ -164,13 +137,35 @@ def transform_salesorder_to_silver(**kwargs):
         )
     )
 
-    (
-        silver_items_df
-        .write.format("delta")
-        .mode("overwrite")
-        .option("overwriteSchema", "true")
-        .save(silver_items_path)
-    )
+    # Write with concurrency handling
+    try:
+        (
+            silver_items_df
+            .write.format("delta")
+            .mode("overwrite")
+            .option("overwriteSchema", "true")
+            .option("replaceWhere", "1=1")  # Safe overwrite
+            .save(silver_items_path)
+        )
+        print(f"✅ Silver SalesOrderItems written successfully")
+        
+    except Exception as e:
+        error_msg = str(e)
+        if "DELTA_PROTOCOL_CHANGED" in error_msg or "concurrent" in error_msg.lower():
+            print(f"⚠️  Concurrent write detected, retrying...")
+            import time
+            time.sleep(2)
+            
+            (
+                silver_items_df
+                .write.format("delta")
+                .mode("overwrite")
+                .option("mergeSchema", "true")
+                .save(silver_items_path)
+            )
+            print(f"✅ Silver SalesOrderItems written on retry")
+        else:
+            raise
 
     print(f"Silver SalesOrderItems written → {silver_items_path}")
 

@@ -1,10 +1,12 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
-RUN pip install streamlit duckdb pandas
+COPY requirements.txt .
 
-COPY app.py .
+RUN pip install -r requirements.txt
+
+COPY . .
 
 EXPOSE 8501
 

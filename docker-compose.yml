@@ -29,8 +29,6 @@ services:
       AIRFLOW__WEBSERVER__PROXY_FIX_X_FOR: 1
       AIRFLOW__WEBSERVER__PROXY_FIX_X_HOST: 1
       AIRFLOW__WEBSERVER__PROXY_FIX_X_PREFIX: 1
-      # For Spark 3.5.x compatibility
-      _PIP_ADDITIONAL_REQUIREMENTS: "pyspark==3.5.3 delta-spark==3.2.0 duckdb dbt-core dbt-duckdb python-dotenv pandas pyarrow deepdiff deltalake great-expectations==0.15.13 streamlit"
 
     ports:
       - "8083:8080"
@@ -42,6 +40,7 @@ services:
       - ./logs:/opt/airflow/logs
       - ./Data:/opt/airflow/data
       - ./dbt_pro:/opt/airflow/dbt_pro
+      - ./id.json:/opt/airflow/id.json:ro
 
     depends_on:
       - postgres
@@ -63,7 +62,7 @@ services:
       - pgadmin_data:/var/lib/pgadmin
 
   streamlit:
-    image: docker.io/joshxt/streamlit
+    build: ./streamlit
     container_name: streamlit
 
     volumes:

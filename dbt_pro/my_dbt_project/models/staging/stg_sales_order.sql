@@ -1,6 +1,9 @@
+-- STAGING LAYER: Sources from Delta Silver layer (transactional data)
+-- Incremental load based on order_date
+
 {{ config(
     materialized='incremental',
-    unique_key=['sales_order_id', 'item_code'],
+    unique_key=['sales_order_id', 'item_code']
     
 ) }}
 
@@ -48,7 +51,7 @@ SELECT
     COALESCE(CAST(warehouse AS VARCHAR), 'N/A') AS warehouse,
     COALESCE(CAST(status AS VARCHAR), 'Open')   AS status,
     COALESCE(CAST(currency AS VARCHAR), 'N/A')  AS currency
-
+    COALESCE(CAST(quotation_name AS VARCHAR), 'N/A')  AS quotation_name
 FROM source_data
 
 {% if is_incremental() %}

@@ -14,7 +14,7 @@ require_auth()          # ← restores session from cookies on refresh
 # Sidebar AFTER auth
 render_sidebar()
 
-con = duckdb.connect(DB_PATH, read_only=False)
+con = duckdb.connect(DB_PATH, read_only=True)
 
 st.title("ERP Dashboard")
 

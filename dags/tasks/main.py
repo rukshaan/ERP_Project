@@ -1,6 +1,6 @@
 import requests
 import os
- 
+import json
 import pandas as pd
 from airflow.models import Variable
  
@@ -11,9 +11,45 @@ class Connect:
     def __init__(self):
         
         self.auth_session = None
- 
-        self.host = f'https://{Variable.get("ERP_HOST")}/api'
-        print("this is for testing.....",self.host)
+        
+        # Load credentials from id.json (mounted into the container) with fallback to Airflow Variables
+        creds_path = os.environ.get(
+            "ERP_CREDENTIALS_FILE",
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "id.json"),
+        )
+
+        erp_host = erp_user = erp_pass = None
+
+        if os.path.exists(creds_path):
+            try:
+                with open(creds_path, "r") as f:
+                    creds = json.load(f)
+                erp_host = creds.get("ERP_HOST")
+                erp_user = creds.get("ERP_USER")
+                erp_pass = creds.get("ERP_PASS")
+            except Exception as e:
+                print(f"Could not load from {creds_path}: {e}. Trying Airflow Variables...")
+        else:
+            print(f"Credentials file not found at {creds_path}. Trying Airflow Variables...")
+
+        if not erp_host or not erp_user or not erp_pass:
+            try:
+                erp_host = Variable.get("ERP_HOST", default_var=None)
+                erp_user = Variable.get("ERP_USER", default_var=None)
+                erp_pass = Variable.get("ERP_PASS", default_var=None)
+            except TypeError:
+                # Airflow versions < 2.5 use 'default' instead of 'default_var'
+                erp_host = Variable.get("ERP_HOST", default=None)
+                erp_user = Variable.get("ERP_USER", default=None)
+                erp_pass = Variable.get("ERP_PASS", default=None)
+        
+        if not erp_host or not erp_user or not erp_pass:
+            raise ValueError("ERP credentials not found in id.json or Airflow Variables")
+        
+        self.erp_user = erp_user
+        self.erp_pass = erp_pass
+        self.host = f'https://{erp_host}/api'
+        print("ERP Host:", self.host)
         self.login()
         
  
@@ -24,7 +60,7 @@ class Connect:
         # Authenticating user
         response = auth_session.post(
             f"{self.host}/method/login",
-            data={"usr": Variable.get("ERP_USER"), "pwd": Variable.get("ERP_PASS")},
+            data={"usr": self.erp_user, "pwd": self.erp_pass},
         )
         print("response is ",response)
  

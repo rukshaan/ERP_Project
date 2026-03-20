@@ -1,3 +1,6 @@
+-- DIMENSION LAYER: Sources from STAGING layer
+-- Creates deduplicated dimension table with surrogate keys
+
 {{ config(materialized='table') }}
 
 WITH cte AS (

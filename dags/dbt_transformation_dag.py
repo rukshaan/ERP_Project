@@ -27,6 +27,15 @@ with DAG(
         """
     )
 
+    # 2️⃣ Run dbt snapshots (creates SCD-2 snapshot tables)
+    dbt_snapshot = BashOperator(
+        task_id='dbt_snapshot',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt snapshot --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
+
     dbt_run = BashOperator(
         task_id='dbt_run',
         bash_command="""
@@ -43,7 +52,9 @@ with DAG(
         bash_command="""
             cd /opt/airflow/dbt_pro/my_dbt_project &&
             dbt debug --profiles-dir /opt/airflow/dbt_pro
-        """
+        """,
+        retries=3,
+        retry_delay=timedelta(seconds=30)
     )
 
     
@@ -57,10 +68,6 @@ with DAG(
         """
     )
     
-    # Dependencies
-    
-
-     
     dbt_docs = BashOperator(
         task_id='dbt_docs_generate',
         bash_command="""
@@ -68,12 +75,13 @@ with DAG(
             dbt docs generate --profiles-dir /opt/airflow/dbt_pro
         """
     )
-    
     dbt_docs_serve = BashOperator(
         task_id='dbt_docs_serve',
         bash_command="""
             cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt docs serve --profiles-dir /opt/airflow/dbt_pro --port 8085 --host 0.0.0.0
+            dbt docs serve --profiles-dir /opt/airflow/dbt_pro
         """
     )
-dbt_debug >> dbt_deps >> dbt_run >> dbt_test >> dbt_docs >> dbt_docs_serve
+    
+    # Dependencies
+    dbt_debug >> dbt_deps >> dbt_snapshot >> dbt_run >> dbt_test >> dbt_docs >> dbt_docs_serve
