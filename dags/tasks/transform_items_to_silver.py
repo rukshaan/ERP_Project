@@ -17,8 +17,10 @@ def transform_items_to_silver(**kwargs):
         .appName("ItemsSilver")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+        .config("spark.sql.debug.maxToStringFields", "100")
     )
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
+    spark.sparkContext.setLogLevel("ERROR")
 
     bronze_path = "/opt/airflow/data/Bronze/delta/Item"
     silver_items_path = "/opt/airflow/data/Silver/delta/Item"

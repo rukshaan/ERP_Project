@@ -1,0 +1,39 @@
+{{ config(materialized='table') }}
+
+WITH source_data AS (
+    SELECT *
+    FROM {{ ref('stg_sales_order') }}
+)
+
+SELECT
+    MD5(sd.sales_order_id || '-' || sd.item_code) AS fact_sales_key,
+    sd.sales_order_id,
+    sd.item_code,
+    c.customer_key,
+    i.item_key,
+    comp.company_key,
+    COALESCE(c.customer_name, 'Unknown Customer') AS customer_name,
+    c.territory,
+    c.customer_type,
+    c.customer_group,
+    sd.item_code,
+    COALESCE(i.item_name, 'Unknown Item') AS item_name,
+    sd.order_date,
+    sd.delivery_date,
+    COALESCE(sd.qty, 0) AS qty,
+    COALESCE(sd.rate, 0) AS rate,
+    COALESCE(sd.amount, 0) AS amount,
+    COALESCE(sd.open_qty, 0) AS open_qty,
+    COALESCE(sd.open_amount, 0) AS open_amount,
+    COALESCE(sd.status, 'Status_Pending') AS order_status,
+    COALESCE(sd.is_fully_delivered, 0) AS is_fully_delivered,
+    COALESCE(sd.quotation_item, 'N/A') AS quotation_item,
+    COALESCE(sd.warehouse, 'Unknown Warehouse') AS warehouse,
+    COALESCE(comp.company, 'Fanta Co') AS company
+FROM source_data sd
+LEFT JOIN {{ ref('dim_customer') }} c
+    ON LOWER(TRIM(sd.customer_name)) = LOWER(TRIM(c.customer_name))
+LEFT JOIN {{ ref('dim_item') }} i
+    ON sd.item_code = i.item_code
+LEFT JOIN {{ ref('dim_company') }} comp
+    ON sd.company = comp.company

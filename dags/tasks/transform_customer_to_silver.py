@@ -24,10 +24,11 @@ def transform_customer_to_silver(**kwargs):
             "spark.sql.catalog.spark_catalog",
             "org.apache.spark.sql.delta.catalog.DeltaCatalog"
         )
+        .config("spark.sql.debug.maxToStringFields", "100")
     )
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
+    spark.sparkContext.setLogLevel("ERROR")
 
     # -------------------------------------
     # 2. Paths

@@ -1,18 +1,10 @@
 import os
-from datetime import datetime
 from pyspark.sql import SparkSession
 from delta import configure_spark_with_delta_pip
 import pyspark.sql.functions as F
-from pyspark.sql.types import (
-    StructType, StructField, StringType, DoubleType, ArrayType
-)
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType, ArrayType
 
 def transform_salesorder_to_silver(**kwargs):
-    
-
-    # -------------------------------------
-    # 1. Spark Session With Delta
-    # -------------------------------------
     builder = (
         SparkSession.builder
         .appName("SalesOrderSilver")
@@ -22,28 +14,45 @@ def transform_salesorder_to_silver(**kwargs):
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
     bronze_path = "/opt/airflow/data/Bronze/delta/SalesOrder"
-    silver_header_path = "/opt/airflow/data/Silver/delta/SalesOrderHeader"
-    silver_items_path = "/opt/airflow/data/Silver/delta/SalesOrderItems"
+    silver_path = "/opt/airflow/data/Silver/delta/SalesOrderItems"
 
     if not os.path.exists(bronze_path):
         raise Exception(f"Bronze path not found: {bronze_path}")
 
-    # -------------------------------------
-    # 2. Read latest bronze batch
-    # -------------------------------------
     bronze_df = spark.read.format("delta").load(bronze_path)
-
     latest_df = (
-        bronze_df
-        .filter(F.col("islatest") == True)
-        .orderBy(F.col("creationdate").desc())
-        .limit(1)
+        bronze_df.filter(F.col("islatest") == True)
+                 .orderBy(F.col("creationdate").desc())
+                 .limit(1)
     )
 
-    # -------------------------------------
-    # 3. Schema definition
-    # -------------------------------------
-    sales_order_schema = ArrayType(
+    # --------------------------
+    # Schemas
+    # --------------------------
+    item_schema = ArrayType(
+        StructType([
+            StructField("name", StringType(), True),
+            StructField("item_code", StringType(), True),
+            StructField("item_name", StringType(), True),
+            StructField("qty", DoubleType(), True),
+            StructField("delivered_qty", DoubleType(), True),
+            StructField("rate", DoubleType(), True),
+            StructField("amount", DoubleType(), True),
+            StructField("warehouse", StringType(), True),
+        ])
+    )
+
+    payment_schema = ArrayType(
+        StructType([
+            StructField("base_payment_amount", DoubleType(), True),
+            StructField("due_date", StringType(), True),
+            StructField("payment_amount", DoubleType(), True),
+            StructField("outstanding", DoubleType(), True),
+            StructField("invoice_portion", DoubleType(), True),
+        ])
+    )
+
+    order_schema = ArrayType(
         StructType([
             StructField("name", StringType(), True),
             StructField("customer", StringType(), True),
@@ -53,121 +62,65 @@ def transform_salesorder_to_silver(**kwargs):
             StructField("company", StringType(), True),
             StructField("grand_total", DoubleType(), True),
             StructField("currency", StringType(), True),
-
-             # Required ERPNext additional fields
+            StructField("quotation_item", StringType(), True),  # Parent quotation
+            StructField("items", item_schema, True),
+            StructField("payment_schedule", payment_schema, True),
+            StructField("modified", StringType(), True),
             StructField("per_delivered", DoubleType(), True),
             StructField("per_billed", DoubleType(), True),
-            StructField("modified", StringType(), True),
-
-            StructField("items", ArrayType(
-                StructType([
-                    StructField("name", StringType(), True),           # Line ID
-                    StructField("item_code", StringType(), True),
-                    StructField("item_name", StringType(), True),
-                    StructField("qty", DoubleType(), True),
-                    StructField("delivered_qty", DoubleType(), True),
-                    StructField("rate", DoubleType(), True),
-                    StructField("amount", DoubleType(), True),
-                    StructField("warehouse", StringType(), True),
-                ])
-            ), True),
         ])
     )
 
-    # -------------------------------------
-    # 4. Expand JSON
-    # -------------------------------------
-    expanded_df = (
-        latest_df
-        .select(
-            F.explode(F.from_json(F.col("data"), sales_order_schema)).alias("so"),
-            "md5", "batchid", "creationdate"
-        )
+    # --------------------------
+    # Explode orders (data is array of orders)
+    # --------------------------
+    expanded_df = latest_df.select(
+        F.explode(F.from_json(F.col("data"), order_schema)).alias("so"),
+        "md5", "batchid", "creationdate"
     )
 
+    # --------------------------
+    # Explode items and payment schedules
+    # --------------------------
+    exploded_df = expanded_df.withColumn("item", F.explode_outer("so.items")) \
+                             .withColumn("payment", F.explode_outer("so.payment_schedule"))
 
-    silver_items_df = (
-        expanded_df
-        .select(
-            F.col("so.name").alias("sales_order_id"),
-            F.col("so.customer").alias("customer"),
-            F.col("so.transaction_date").alias("order_date"),
-            F.col("so.delivery_date").alias("delivery_date"),
-            F.col("so.status").alias("status"),
-            F.col("so.company").alias("company"),
-            F.col("so.grand_total").alias("grand_total"),
-            F.col("so.currency").alias("currency"),
-            F.explode("so.items").alias("item"),
-            "batchid", "creationdate", "md5"
-        )
-        .select(
-            "sales_order_id",
-            "customer",
-            "order_date",
-            "delivery_date",
-            "status",
-            "company",
-            "grand_total",
-            "currency",
-            F.col("item.name").alias("item_id"),
-            F.col("item.item_code").alias("item_code"),
-            F.col("item.item_name").alias("item_name"),
-            F.col("item.qty").alias("qty"),
-            F.col("item.delivered_qty").alias("delivered_qty"),
-            F.col("item.rate").alias("rate"),
-            F.col("item.amount").alias("amount"),
-            F.col("item.warehouse").alias("warehouse"),
-
-            # ---------------------------------------------------------
-            #  DERIVED FIELDS (CALCULATED IN SILVER)
-            # ---------------------------------------------------------
-            (F.col("item.qty") - F.col("item.delivered_qty")).alias("open_qty"),
-
-            ((F.col("item.qty") - F.col("item.delivered_qty")) * F.col("item.rate"))
-                .alias("open_amount"),
-
-            F.when(
-                (F.col("item.qty") - F.col("item.delivered_qty")) == 0,
-                "Yes"
-            ).otherwise("No").alias("is_fully_delivered"),
-        
-            "batchid",
-            "creationdate",
-            "md5"
-        )
+    # --------------------------
+    # Final select
+    # --------------------------
+    silver_df = exploded_df.select(
+        F.col("so.name").alias("sales_order_id"),
+        F.col("so.customer"),
+        F.col("so.transaction_date").alias("order_date"),
+        F.col("so.delivery_date"),
+        F.col("so.status"),
+        F.col("so.company"),
+        F.col("so.grand_total"),
+        F.col("so.currency"),
+        F.col("so.quotation_item"),  # Now preserved correctly
+        F.col("so.modified"),
+        F.col("so.per_delivered"),
+        F.col("so.per_billed"),
+        F.col("item.name").alias("item_id"),
+        F.col("item.item_code"),
+        F.col("item.item_name"),
+        F.col("item.qty"),
+        F.col("item.delivered_qty"),
+        F.col("item.rate"),
+        F.col("item.amount"),
+        F.col("item.warehouse"),
+        F.col("payment.base_payment_amount"),
+        F.col("payment.payment_amount"),
+        F.col("payment.outstanding"),
+        F.col("payment.invoice_portion"),
+        (F.col("item.qty") - F.col("item.delivered_qty")).alias("open_qty"),
+        ((F.col("item.qty") - F.col("item.delivered_qty")) * F.col("item.rate")).alias("open_amount"),
+        F.when((F.col("item.qty") - F.col("item.delivered_qty")) == 0, "Yes").otherwise("No").alias("is_fully_delivered"),
+        "batchid",
+        "creationdate",
+        "md5"
     )
 
-    # Write with concurrency handling
-    try:
-        (
-            silver_items_df
-            .write.format("delta")
-            .mode("overwrite")
-            .option("overwriteSchema", "true")
-            .option("replaceWhere", "1=1")  # Safe overwrite
-            .save(silver_items_path)
-        )
-        print(f"✅ Silver SalesOrderItems written successfully")
-        
-    except Exception as e:
-        error_msg = str(e)
-        if "DELTA_PROTOCOL_CHANGED" in error_msg or "concurrent" in error_msg.lower():
-            print(f"⚠️  Concurrent write detected, retrying...")
-            import time
-            time.sleep(2)
-            
-            (
-                silver_items_df
-                .write.format("delta")
-                .mode("overwrite")
-                .option("mergeSchema", "true")
-                .save(silver_items_path)
-            )
-            print(f"✅ Silver SalesOrderItems written on retry")
-        else:
-            raise
-
-    print(f"Silver SalesOrderItems written → {silver_items_path}")
-
-    # # Show sample
-    silver_items_df.show(20, truncate=False)
+    silver_df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(silver_path)
+    print(f"✅ Silver table written → {silver_path}")
+    silver_df.show(50, truncate=False)

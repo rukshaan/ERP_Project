@@ -14,8 +14,10 @@ def transform_quotation_to_silver(**kwargs):
         .appName("QuotationSilver")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+        .config("spark.sql.debug.maxToStringFields", "100")
     )
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
+    spark.sparkContext.setLogLevel("ERROR")
 
     bronze_path = "/opt/airflow/data/Bronze/delta/Quotation"
     silver_path = "/opt/airflow/data/Silver/delta/Quotation"
@@ -134,9 +136,34 @@ def transform_quotation_to_silver(**kwargs):
     # -------------------------------------
     # 6. Flatten all columns and rename nested fields
     # -------------------------------------
-    item_cols = [F.col(f"item.{c}").alias(f"item_{c}") for c in df.select("item.*").columns]
-    payment_cols = [F.col(f"payment.{c}").alias(f"payment_{c}") for c in df.select("payment.*").columns]
-    schedule_cols = [F.col(f"schedule.{c}").alias(f"schedule_{c}") for c in df.select("schedule.*").columns]
+    # Since item, payment, schedule are Maps (not Structs), we need to extract keys differently
+    # First, let's get all possible keys from the maps
+    
+    # For Maps, we need to explicitly select the keys we want
+    # Common ERPNext item fields
+    item_fields = [
+        "item_code", "item_name", "description", "qty", "rate", "amount",
+        "warehouse", "uom", "stock_qty", "stock_uom", "conversion_factor",
+        "price_list_rate", "discount_percentage", "net_rate", "net_amount",
+        "billed_amt", "valuation_rate", "gross_profit", "weight_per_unit",
+        "weight_uom", "shelf_life", "country_of_origin", "custom_delivery_date"
+    ]
+    
+    # Payment fields
+    payment_fields = [
+        "mode_of_payment", "amount", "base_amount", "type"
+    ]
+    
+    # Payment schedule fields
+    schedule_fields = [
+        "payment_term", "due_date", "invoice_portion", "payment_amount",
+        "outstanding", "paid_amount", "discount"
+    ]
+    
+    # Build column expressions for map extraction
+    item_cols = [F.col("item").getItem(f).alias(f"item_{f}") for f in item_fields]
+    payment_cols = [F.col("payment").getItem(f).alias(f"payment_{f}") for f in payment_fields]
+    schedule_cols = [F.col("schedule").getItem(f).alias(f"schedule_{f}") for f in schedule_fields]
 
     silver_df = df.select(
         "q.*",

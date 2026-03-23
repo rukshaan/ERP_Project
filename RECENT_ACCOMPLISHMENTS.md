@@ -231,7 +231,4 @@ Mart Layer (DBT - Business Metrics)
 ### Created
 - `dags/tasks/delta_utils.py` (new utility module)
 
----
 
-**Document Version:** 1.0  
-**Last Updated:** March 20, 2026

@@ -45,18 +45,19 @@ with DAG(
         task_id="transform_quotation_to_silver",
         python_callable=transform_quotation_to_silver,
     )
-    # sales_invoice_task = PythonOperator(
-    #     task_id="transform_sales_invoice_to_silver",
-    #     python_callable=transform_sales_invoice_to_silver,
-    # )
+    sales_invoice_task = PythonOperator(
+        task_id="transform_sales_invoice_to_silver",
+        python_callable=transform_sales_invoice_to_silver,
+    )
     trigger_third_dag = TriggerDagRunOperator(
         task_id="trigger_Third_dag",
         trigger_dag_id="dbt_transformation_dag",  #  EXACT dag_id
         reset_dag_run=True,
         wait_for_completion=False,  # recommended
     )
-    items_task >> quotation_task >> sales_order_task >> customer_task >> trigger_third_dag
-
+    items_task >> quotation_task >> sales_order_task >> sales_invoice_task >> customer_task >> trigger_third_dag
+    
+    # sales_order_task >> trigger_third_dag
     # schema_check = PythonOperator(
     #     task_id="check_schema_files",
     #     python_callable=check_schema,

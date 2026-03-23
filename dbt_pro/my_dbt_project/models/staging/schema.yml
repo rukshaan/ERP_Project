@@ -21,3 +21,84 @@ models:
   #   columns:
   #     - name: company_code
   #       tests: [not_null]
+  - name: stg_sales_invoice
+    description: "Staging table for Sales Invoice raw data from source system."
+    columns:
+      - name: sales_invoice_id
+        description: "Unique identifier for the sales invoice."
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        description: "Name of the customer."
+        tests:
+          - not_null
+      - name: company
+        description: "Company name associated with the invoice."
+        tests:
+          - not_null
+      - name: creation
+        description: "Invoice creation date."
+        tests:
+          - not_null
+      - name: posting_date
+        description: "Invoice posting date."
+      - name: due_date
+        description: "Invoice due date."
+      - name: status
+        description: "Current status of the invoice."
+      - name: docstatus
+        description: "Document status code."
+      - name: total_qty
+        description: "Total quantity of items in the invoice."
+      - name: net_total
+        description: "Net total amount of the invoice."
+      - name: grand_total
+        description: "Grand total amount of the invoice including taxes."
+      - name: currency
+        description: "Currency code of the invoice."
+      - name: items
+        description: "Nested JSON or array of invoice line items."
+      - name: payments
+        description: "Nested JSON or array of payments applied."
+      - name: taxes
+        description: "Taxes applied to the invoice."
+    
+  - name: stg_quotation
+    description: "Staging table for Sales Quotation raw data from source system."
+    columns:
+      - name: quotation_id
+        description: "Unique identifier for the quotation."
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        description: "Customer name for the quotation."
+        tests:
+          - not_null
+      - name: company
+        description: "Company name associated with the quotation."
+        tests:
+          - not_null
+      - name: creation
+        description: "Quotation creation date."
+        tests:
+          - not_null
+      - name: posting_date
+        description: "Quotation posting date."
+      - name: expiry_date
+        description: "Quotation expiry date."
+      - name: status
+        description: "Current status of the quotation (Draft, Submitted, etc.)."
+      - name: total_qty
+        description: "Total quantity of items in the quotation."
+      - name: net_total
+        description: "Net total amount of the quotation."
+      - name: grand_total
+        description: "Grand total including taxes."
+      - name: currency
+        description: "Currency code."
+      - name: items
+        description: "Nested array of quotation line items."
+      - name: taxes
+        description: "Taxes applied on quotation."

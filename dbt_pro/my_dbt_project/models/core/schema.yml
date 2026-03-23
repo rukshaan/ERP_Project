@@ -5,7 +5,7 @@ models:
   # -----------------------------
   # FACT TABLE
   # -----------------------------
-  - name: fact_final_sales_order_files
+  - name: fact_sales_order
     description: "Final fact table joining sales orders with item, customer, and company dimensions using surrogate keys"
     columns:
       - name: sales_order_id
@@ -227,3 +227,132 @@ models:
         description: "Day part of the date"
         tests:
           - not_null
+  - name: fact_sales_invoice
+    description: "Fact table for Sales Invoice, mapped to customer, company, and date dimensions."
+    columns:
+      - name: fact_sales_invoice_key
+        description: "Surrogate key for sales invoice fact (MD5 of sales_invoice_id)."
+        tests:
+          - not_null
+          - unique
+      - name: sales_invoice_id
+        description: "Original sales invoice ID from source."
+        tests:
+          - not_null
+      - name: customer_key
+        description: "Surrogate key linking to dim_customer."
+      - name: company_key
+        description: "Surrogate key linking to dim_company."
+      - name: creation_date_key
+        description: "Surrogate key linking to dim_date for invoice creation."
+      - name: posting_date_key
+        description: "Surrogate key linking to dim_date for invoice posting."
+      - name: due_date_key
+        description: "Surrogate key linking to dim_date for invoice due date."
+      - name: status
+        description: "Invoice status (Draft, Submitted, Paid, etc.)."
+      - name: docstatus
+        description: "Document status code."
+      - name: is_return
+        description: "Flag indicating if invoice is a return."
+      - name: is_pos
+        description: "Flag indicating if invoice is POS type."
+      - name: is_discounted
+        description: "Flag indicating if any discount applied."
+      - name: currency
+        description: "Currency code."
+      - name: conversion_rate
+        description: "Currency conversion rate to base currency."
+      - name: total_qty
+        description: "Total quantity of items in invoice."
+      - name: net_total
+        description: "Net total amount of invoice."
+      - name: grand_total
+        description: "Grand total including taxes."
+      - name: rounded_total
+        description: "Rounded total amount."
+      - name: outstanding_amount
+        description: "Amount yet to be paid."
+      - name: paid_amount
+        description: "Amount paid."
+      - name: discount_amount
+        description: "Total discount applied."
+      - name: additional_discount_percentage
+        description: "Additional discount in percentage."
+      - name: customer_address
+        description: "Customer billing address."
+      - name: shipping_address
+        description: "Shipping address."
+      - name: items
+        description: "Nested array of invoice line items."
+      - name: payments
+        description: "Nested array of payments."
+      - name: payment_schedule
+        description: "Payment schedule, if any."
+      - name: sales_team
+        description: "Sales team involved in invoice."
+      - name: taxes
+        description: "Taxes applied on invoice."
+      - name: remarks
+        description: "Additional remarks or notes."
+      - name: creationdate
+        description: "Record creation timestamp."
+      - name: batchid
+        description: "ETL batch identifier."
+      - name: md5
+        description: "MD5 hash for change tracking or uniqueness."
+
+  - name: fact_quotation
+    description: "Fact table for Sales Quotation, mapped to customer, company, and date dimensions."
+    columns:
+      - name: fact_quotation_key
+        description: "Surrogate key for quotation fact (MD5 of quotation_id)."
+        tests:
+          - not_null
+          - unique
+      - name: quotation_id
+        description: "Original quotation ID from source."
+        tests:
+          - not_null
+      - name: customer_key
+        description: "Surrogate key linking to dim_customer."
+      - name: company_key
+        description: "Surrogate key linking to dim_company."
+      - name: creation_date_key
+        description: "Surrogate key linking to dim_date for quotation creation."
+      - name: posting_date_key
+        description: "Surrogate key linking to dim_date for quotation posting."
+      - name: expiry_date_key
+        description: "Surrogate key linking to dim_date for quotation expiry."
+      - name: status
+        description: "Quotation status (Draft, Submitted, etc.)."
+      - name: total_qty
+        description: "Total quantity of items in quotation."
+      - name: net_total
+        description: "Net total amount."
+      - name: grand_total
+        description: "Grand total including taxes."
+      - name: currency
+        description: "Currency code."
+      - name: discount_amount
+        description: "Total discount applied."
+      - name: additional_discount_percentage
+        description: "Additional discount percentage, if any."
+      - name: customer_address
+        description: "Customer billing address."
+      - name: shipping_address
+        description: "Shipping address."
+      - name: items
+        description: "Nested array of quotation line items."
+      - name: taxes
+        description: "Taxes applied on quotation."
+      - name: sales_team
+        description: "Sales team responsible for the quotation."
+      - name: remarks
+        description: "Additional notes or remarks."
+      - name: creationdate
+        description: "Record creation timestamp."
+      - name: batchid
+        description: "ETL batch identifier."
+      - name: md5
+        description: "MD5 hash for change tracking or uniqueness."
