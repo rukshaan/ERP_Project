@@ -49,6 +49,7 @@ def render_login():
             conn = Connect(username=username, password=password)
 
         if conn.auth_session:
+            print("Login successful for user:", username)  # Debug log
             st.session_state.authenticated = True
             st.session_state.user = username
             st.session_state.erp_conn = conn
@@ -61,6 +62,8 @@ def render_login():
             st.success("✅ Login successful")
             st.rerun()
         else:
+            print("Login failed for user:", username)  # Debug log
+            print("Response from ERP:")  # Debug log
             st.error("❌ Invalid ERP credentials")
 
     # 🔁 AUTO RESTORE LOGIN (ON REFRESH)
