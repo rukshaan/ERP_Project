@@ -29,41 +29,65 @@ models:
         tests:
           - not_null
           - unique
+
       - name: customer_name
         description: "Name of the customer."
         tests:
           - not_null
+
       - name: company
         description: "Company name associated with the invoice."
         tests:
           - not_null
-      - name: creation
-        description: "Invoice creation date."
+
+      - name: creationdate
+        description: "Invoice creation timestamp."
         tests:
           - not_null
+
       - name: posting_date
         description: "Invoice posting date."
+        tests: []
+
       - name: due_date
         description: "Invoice due date."
+        tests: []
+
       - name: status
         description: "Current status of the invoice."
+        tests: []
+
       - name: docstatus
         description: "Document status code."
+        tests: []
+
       - name: total_qty
         description: "Total quantity of items in the invoice."
+        tests: []
+
       - name: net_total
         description: "Net total amount of the invoice."
+        tests: []
+
       - name: grand_total
         description: "Grand total amount of the invoice including taxes."
+        tests: []
+
       - name: currency
         description: "Currency code of the invoice."
+        tests: []
+
       - name: items
         description: "Nested JSON or array of invoice line items."
+        tests: []
+
       - name: payments
         description: "Nested JSON or array of payments applied."
+        tests: []
+
       - name: taxes
         description: "Taxes applied to the invoice."
-    
+        tests: []
   - name: stg_quotation
     description: "Staging table for Sales Quotation raw data from source system."
     columns:

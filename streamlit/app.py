@@ -20,7 +20,7 @@ st.title("ERP Dashboard")
 
 df = con.execute("""
     SELECT *
-    FROM main_prod.fact_final_joined_files
+    FROM main_prod.fact_sales_order
     ORDER BY order_date DESC
 """).df()
 

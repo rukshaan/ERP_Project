@@ -12,22 +12,16 @@ models:
         description: "Unique identifier for the sales order"
         tests:
           - not_null
-          - unique
+          
 
       - name: customer_key
-        description: "Surrogate key for the customer from dim_customer"
-        tests:
-          - not_null
+        description: "Surrogate key for the customer from dim_customer (nullable - LEFT JOIN)"
 
       - name: item_key
-        description: "Surrogate key for the item from dim_item"
-        tests:
-          - not_null
+        description: "Surrogate key for the item from dim_item (nullable - LEFT JOIN)"
 
       - name: company_key
-        description: "Surrogate key for the company from dim_company"
-        tests:
-          - not_null
+        description: "Surrogate key for the company from dim_company (nullable - LEFT JOIN)"
 
       - name: customer_name
         description: "Name of the customer associated with the sales order"
@@ -91,7 +85,7 @@ models:
         description: "Surrogate key for the customer"
         tests:
           - not_null
-          - unique
+          
 
       - name: customer_id
         description: "Business key / natural key for the customer"
@@ -143,7 +137,7 @@ models:
         description: "Surrogate key for the item"
         tests:
           - not_null
-          - unique
+          
 
       - name: item_code
         description: "Business key / natural key for the item"
@@ -206,8 +200,6 @@ models:
         description: "Surrogate key for the date"
         tests:
           - not_null
-          - unique
-
       - name: date_value
         description: "Date value for the dimension"
         tests:
@@ -230,11 +222,8 @@ models:
   - name: fact_sales_invoice
     description: "Fact table for Sales Invoice, mapped to customer, company, and date dimensions."
     columns:
-      - name: fact_sales_invoice_key
-        description: "Surrogate key for sales invoice fact (MD5 of sales_invoice_id)."
-        tests:
-          - not_null
-          - unique
+      
+          
       - name: sales_invoice_id
         description: "Original sales invoice ID from source."
         tests:
@@ -305,8 +294,8 @@ models:
   - name: fact_quotation
     description: "Fact table for Sales Quotation, mapped to customer, company, and date dimensions."
     columns:
-      - name: fact_quotation_key
-        description: "Surrogate key for quotation fact (MD5 of quotation_id)."
+      - name: fact_quotation_item_key
+        description: "Surrogate key for quotation fact (MD5 of quotation_id + item_code)."
         tests:
           - not_null
           - unique

@@ -18,7 +18,7 @@ con = duckdb.connect(DB_PATH, read_only=True)
 
 df = con.execute("""
     SELECT *
-    FROM fact_final_joined_files
+    FROM fact_sales_order
     LIMIT 100
 """).df()
 

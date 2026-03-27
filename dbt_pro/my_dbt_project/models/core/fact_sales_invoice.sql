@@ -1,106 +1,201 @@
 {{
     config(
         materialized='incremental',
-        unique_key='fact_sales_invoice_key'
+        unique_key='sales_invoice_item_key'
     )
 }}
 
+-- =====================================
+-- 1. SOURCE
+-- =====================================
 WITH source_data AS (
     SELECT *
     FROM {{ ref('stg_sales_invoice') }}
 ),
 
--- Deduplicate
-deduped AS (
-    SELECT *
-    FROM (
-        SELECT *,
-               ROW_NUMBER() OVER (
-                   PARTITION BY sales_invoice_id
-                   ORDER BY creationdate DESC
-               ) AS rn
-        FROM source_data
-    ) t
-    WHERE rn = 1
-),
-
--- Map to dimensions
-dim_mapped AS (
+-- =====================================
+-- 2. ITEMS (BASE GRAIN)
+-- =====================================
+items_exploded AS (
     SELECT
         si.*,
-        -- Fix COALESCE type casting
-        COALESCE(CAST(c.customer_key AS STRING), '-1') AS customer_key,
-        COALESCE(CAST(comp.company_key AS STRING), '-1') AS company_key,
-        COALESCE(CAST(dd.date_key AS STRING), '-1') AS creation_date_key,
-        COALESCE(CAST(dd2.date_key AS STRING), '-1') AS posting_date_key,
-        COALESCE(CAST(dd3.date_key AS STRING), '-1') AS due_date_key
-    FROM deduped si
-    LEFT JOIN {{ ref('dim_customer') }} c
-        ON LOWER(TRIM(si.customer_name)) = LOWER(TRIM(c.customer_name))
-    LEFT JOIN {{ ref('dim_company') }} comp
-        ON LOWER(TRIM(si.company)) = LOWER(TRIM(comp.company))
-    LEFT JOIN {{ ref('dim_date') }} dd
-        ON si.creationdate = dd.date_value
-    LEFT JOIN {{ ref('dim_date') }} dd2
-        ON si.posting_date = dd2.date_value
-    LEFT JOIN {{ ref('dim_date') }} dd3
-        ON si.due_date = dd3.date_value
+        item.value AS item_json
+    FROM source_data si,
+         UNNEST(si.items) AS item(value)
 ),
 
--- Add surrogate key
-with_keys AS (
+items_parsed AS (
+    SELECT
+        ie.sales_invoice_id,
+        ie.creation_ts,
+        ie.customer,
+        ie.posting_date,
+        ie.company,
+
+        json_extract(item_json, '$.item_code') AS item_code,
+        json_extract(item_json, '$.item_name') AS item_name,
+        json_extract(item_json, '$.description') AS item_description,
+
+        CAST(json_extract(item_json, '$.qty') AS DOUBLE) AS item_qty,
+        CAST(json_extract(item_json, '$.rate') AS DOUBLE) AS item_rate,
+        CAST(json_extract(item_json, '$.amount') AS DOUBLE) AS item_amount
+
+    FROM items_exploded ie
+),
+
+-- =====================================
+-- 3. SALES TEAM
+-- =====================================
+sales_team_exploded AS (
+    SELECT
+        si.sales_invoice_id,
+        team.value AS team_json
+    FROM source_data si,
+         UNNEST(si.sales_team) AS team(value)
+),
+
+sales_team_parsed AS (
+    SELECT
+        sales_invoice_id,
+
+        CAST(json_extract(team_json, '$.allocated_percentage') AS DOUBLE) AS allocated_percentage,
+        CAST(json_extract(team_json, '$.allocated_amount') AS DOUBLE) AS team_allocated_amount
+
+    FROM sales_team_exploded
+),
+
+-- =====================================
+-- 4. PAYMENT SCHEDULE
+-- =====================================
+payment_exploded AS (
+    SELECT
+        si.sales_invoice_id,
+        pay.value AS payment_json
+    FROM source_data si,
+         UNNEST(si.payment_schedule) AS pay(value)
+),
+
+payment_parsed AS (
+    SELECT
+        sales_invoice_id,
+
+        json_extract(payment_json, '$.due_date') AS due_date,
+        CAST(json_extract(payment_json, '$.payment_amount') AS DOUBLE) AS payment_amount,
+        CAST(json_extract(payment_json, '$.outstanding') AS DOUBLE) AS outstanding_amount,
+        CAST(json_extract(payment_json, '$.invoice_portion') AS DOUBLE) AS invoice_portion
+
+    FROM payment_exploded
+),
+
+-- =====================================
+-- 5. DIM ITEM MAPPING
+-- =====================================
+dim_mapped AS (
+    SELECT
+        ip.*,
+        COALESCE(di.item_key, '-1') AS item_key
+    FROM items_parsed ip
+    LEFT JOIN {{ ref('dim_item') }} di
+        ON LOWER(ip.item_code) = LOWER(di.item_code)
+),
+
+-- =====================================
+-- 6. JOIN SALES TEAM
+-- =====================================
+with_sales_team AS (
+    SELECT
+        d.*,
+
+        
+        st.allocated_percentage,
+        st.team_allocated_amount
+
+    FROM dim_mapped d
+    LEFT JOIN sales_team_parsed st
+        ON d.sales_invoice_id = st.sales_invoice_id
+),
+
+-- =====================================
+-- 7. JOIN PAYMENT SCHEDULE
+-- =====================================
+with_payments AS (
+    SELECT
+        w.*,
+
+        p.due_date,
+        p.payment_amount,
+        p.outstanding_amount,
+        p.invoice_portion
+
+    FROM with_sales_team w
+    LEFT JOIN payment_parsed p
+        ON w.sales_invoice_id = p.sales_invoice_id
+),
+
+-- =====================================
+-- 8. FINAL LOGIC
+-- =====================================
+final AS (
     SELECT
         *,
-        MD5(sales_invoice_id) AS fact_sales_invoice_key
-    FROM dim_mapped
+
+        MD5(CONCAT(
+            sales_invoice_id,
+            item_code,
+            COALESCE(due_date, DATE '1900-01-01')
+        )) AS sales_invoice_item_key
+
+    FROM with_payments
 ),
 
--- Incremental logic
-final_incremental AS (
+-- =====================================
+-- 9. INCREMENTAL FILTER
+-- =====================================
+filtered AS (
+    SELECT *
+    FROM final
+
     {% if is_incremental() %}
-    SELECT wk.*
-    FROM with_keys wk
-    LEFT JOIN {{ this }} existing
-        ON wk.fact_sales_invoice_key = existing.fact_sales_invoice_key
-    WHERE existing.fact_sales_invoice_key IS NULL
-    {% else %}
-    SELECT * FROM with_keys
+    WHERE creation_ts > (
+        SELECT COALESCE(MAX(creation_ts), TIMESTAMP '1900-01-01')
+        FROM {{ this }}
+    )
     {% endif %}
 )
 
+-- =====================================
+-- 10. FINAL OUTPUT (NO SELECT *)
+-- =====================================
 SELECT
-    fact_sales_invoice_key,
+
+    -- INVOICE LEVEL
     sales_invoice_id,
-    customer_key,
-    COALESCE(customer_name, 'Unknown Customer') AS customer_name,
-    territory,
-    customer_group,
-    is_internal_customer,
-    company_key,
-    COALESCE(company, 'Unknown Company') AS company,
-    creation_date_key,
-    posting_date_key,
-    due_date_key,
-    COALESCE(status, 'Draft') AS status,
-    docstatus,
-    is_return,
-    is_pos,
-    is_discounted,
-    currency,
-    COALESCE(CAST(conversion_rate AS DOUBLE), 1.0) AS conversion_rate,
-    COALESCE(CAST(total_qty AS DOUBLE), 0.0) AS total_qty,
-    COALESCE(CAST(net_total AS DOUBLE), 0.0) AS net_total,
-    COALESCE(CAST(grand_total AS DOUBLE), 0.0) AS grand_total,
-    COALESCE(CAST(rounded_total AS DOUBLE), 0.0) AS rounded_total,
-    COALESCE(CAST(outstanding_amount AS DOUBLE), 0.0) AS outstanding_amount,
-    COALESCE(CAST(paid_amount AS DOUBLE), 0.0) AS paid_amount,
-    apply_discount_on,
-    COALESCE(CAST(discount_amount AS DOUBLE), 0.0) AS discount_amount,
-    COALESCE(CAST(additional_discount_percentage AS DOUBLE), 0.0) AS additional_discount_percentage,
-    customer_address,
-    shipping_address,
-    remarks,
-    creationdate,
-    batchid,
-    md5
-FROM final_incremental
+    creation_ts,
+    customer,
+    posting_date,
+    company,
+
+    -- ITEM LEVEL
+    item_code,
+    item_name,
+    item_description,
+    item_qty,
+    item_rate,
+    item_amount,
+    item_key,
+
+    -- SALES TEAM
+    
+    allocated_percentage,
+    team_allocated_amount,
+
+    -- PAYMENT SCHEDULE
+    due_date,
+    payment_amount,
+    outstanding_amount,
+    invoice_portion,
+
+    -- SURROGATE KEY
+    sales_invoice_item_key
+
+FROM filtered

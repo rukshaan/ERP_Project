@@ -13,40 +13,12 @@ default_args = {
 with DAG(
     'dbt_transformation_dag',
     default_args=default_args,
-    schedule='0 * * * *',  # Run hourly
+    schedule=None,
     catchup=False,
     tags=['dbt', 'transformations']
 ) as dag:
 
-    # 1️⃣ Install dbt packages (dbt_utils, etc.)
-    dbt_deps = BashOperator(
-        task_id='dbt_deps',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt deps --profiles-dir /opt/airflow/dbt_pro
-        """
-    )
-
-    # 2️⃣ Run dbt snapshots (creates SCD-2 snapshot tables)
-    dbt_snapshot = BashOperator(
-        task_id='dbt_snapshot',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt snapshot --profiles-dir /opt/airflow/dbt_pro
-        """
-    )
-
-    dbt_run = BashOperator(
-        task_id='dbt_run',
-        bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt run --profiles-dir /opt/airflow/dbt_pro
-        """
-    )
-
-
-
-    # 1️⃣ Install dbt packages (dbt_utils, etc.)
+    # 1️⃣ Debug dbt
     dbt_debug = BashOperator(
         task_id='dbt_debug',
         bash_command="""
@@ -57,9 +29,34 @@ with DAG(
         retry_delay=timedelta(seconds=30)
     )
 
-    
+    # 2️⃣ Install dbt packages
+    dbt_deps = BashOperator(
+        task_id='dbt_deps',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt deps --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
 
-    # # 3️⃣ (Optional) Run dbt tests
+    # 3️⃣ Run dbt snapshots
+    dbt_snapshot = BashOperator(
+        task_id='dbt_snapshot',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt snapshot --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
+
+    # 4️⃣ Run dbt models
+    dbt_run = BashOperator(
+        task_id='dbt_run',
+        bash_command="""
+            cd /opt/airflow/dbt_pro/my_dbt_project &&
+            dbt run --profiles-dir /opt/airflow/dbt_pro
+        """
+    )
+
+    # 5️⃣ Run dbt tests
     dbt_test = BashOperator(
         task_id='dbt_test',
         bash_command="""
@@ -67,21 +64,25 @@ with DAG(
             dbt test --profiles-dir /opt/airflow/dbt_pro
         """
     )
-    
-    dbt_docs = BashOperator(
+
+    # 6️⃣ Generate dbt docs
+    dbt_docs_generate = BashOperator(
         task_id='dbt_docs_generate',
         bash_command="""
             cd /opt/airflow/dbt_pro/my_dbt_project &&
             dbt docs generate --profiles-dir /opt/airflow/dbt_pro
         """
     )
+
+    # 7️⃣ Serve docs using Python HTTP server
     dbt_docs_serve = BashOperator(
         task_id='dbt_docs_serve',
         bash_command="""
-            cd /opt/airflow/dbt_pro/my_dbt_project &&
-            dbt docs serve --profiles-dir /opt/airflow/dbt_pro
-        """
+            cd /opt/airflow/dbt_pro/my_dbt_project/target &&
+            python -m http.server 8085
+        """,
+        # Optional: you can set retries if you want
     )
-    
+
     # Dependencies
-    dbt_debug >> dbt_deps >> dbt_snapshot >> dbt_run >> dbt_test >> dbt_docs >> dbt_docs_serve
+    dbt_debug >> dbt_deps >> dbt_snapshot >> dbt_run >> dbt_test >> dbt_docs_generate >> dbt_docs_serve

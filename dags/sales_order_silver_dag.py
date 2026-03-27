@@ -23,7 +23,7 @@ default_args = {
 with DAG(
     dag_id="sales_order_bronze_silver",
     default_args=default_args,
-    schedule="0 * * * *",  # Run hourly
+    schedule=None,
     catchup=False,
 ) as dag:
 

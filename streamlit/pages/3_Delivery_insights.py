@@ -74,7 +74,7 @@ SELECT
     COUNT(DISTINCT CASE WHEN f.delivery_date <= f.order_date THEN f.sales_order_id END) AS on_time,
     COUNT(DISTINCT CASE WHEN f.delivery_date > f.order_date THEN f.sales_order_id END) AS late,
     AVG(DATEDIFF('day', f.order_date, f.delivery_date)) AS avg_delay
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 WHERE {where_clause}
 """
 kpi_df = con.execute(kpi_query).df()
@@ -100,7 +100,7 @@ st.subheader("🏆 Top Customers")
 
 customer_df = con.execute(f"""
 SELECT customer_name, SUM(amount) AS total_value
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 WHERE {where_clause}
 GROUP BY customer_name
 ORDER BY total_value DESC
@@ -128,7 +128,7 @@ item_df = con.execute(f"""
 SELECT i.item_name,
        SUM(f.qty) AS total_qty,
        SUM(f.amount) AS total_value
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}
   AND f.customer_name = '{selected_customer}'
@@ -154,7 +154,7 @@ st.subheader("🔥 Top Items by Quantity")
 
 top_items = con.execute(f"""
 SELECT i.item_name, SUM(f.qty) AS total_qty
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}
 GROUP BY i.item_name

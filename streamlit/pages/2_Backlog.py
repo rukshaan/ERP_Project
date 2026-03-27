@@ -73,7 +73,7 @@ SELECT
     COALESCE(SUM(f.open_qty), 0) AS total_open_qty,
     COALESCE(COUNT(DISTINCT c.customer_name), 0) AS affected_customers,
     COALESCE(COUNT(DISTINCT i.item_name), 0) AS affected_items
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}
@@ -105,7 +105,7 @@ with tab1:
         COALESCE(SUM(f.open_qty * f.rate), 0) AS open_value,
         COALESCE(SUM(f.open_qty), 0) AS open_qty,
         COUNT(DISTINCT f.sales_order_id) AS order_count
-    FROM main_prod.fact_final_joined_files f
+    FROM main_prod.fact_sales_order f
     JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
     JOIN main_prod.dim_item i ON f.item_code = i.item_code
     WHERE {where_clause}
@@ -142,7 +142,7 @@ with tab2:
         COALESCE(SUM(f.open_qty * f.rate), 0) AS open_value,
         COALESCE(SUM(f.open_qty), 0) AS open_qty,
         COUNT(DISTINCT f.sales_order_id) AS order_count
-    FROM main_prod.fact_final_joined_files f
+    FROM main_prod.fact_sales_order f
     JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
     JOIN main_prod.dim_item i ON f.item_code = i.item_code
     WHERE {where_clause}
@@ -179,7 +179,7 @@ with tab2:
 #            COALESCE(SUM(f.open_qty * f.rate), 0) AS monthly_open_value,
 #            COALESCE(SUM(f.open_qty), 0) AS monthly_open_qty,
 #            COUNT(DISTINCT f.sales_order_id) AS monthly_order_count
-#     FROM main_prod.fact_final_joined_files f
+#     FROM main_prod.fact_sales_order f
 #     JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 #     JOIN main_prod.dim_item i ON f.item_code = i.item_code
 #     WHERE {where_clause}
@@ -214,7 +214,7 @@ with tab3:
         COALESCE(SUM(f.open_qty * f.rate), 0) AS monthly_open_value,
         COALESCE(SUM(f.open_qty), 0) AS monthly_open_qty,
         COUNT(DISTINCT f.sales_order_id) AS monthly_order_count
-    FROM main_prod.fact_final_joined_files f
+    FROM main_prod.fact_sales_order f
     JOIN main_prod.dim_customer c 
         ON f.customer_name = c.customer_name
     JOIN main_prod.dim_item i 
@@ -363,7 +363,7 @@ SELECT f.sales_order_id,
         WHEN f.delivery_date <= DATE_ADD(CURRENT_DATE, 3) THEN 'Urgent'
         ELSE 'On Track'
     END AS delivery_status
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}
@@ -410,7 +410,7 @@ SELECT
     (f.open_qty * f.rate) AS amount,
     c.customer_name,
     i.item_name
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}

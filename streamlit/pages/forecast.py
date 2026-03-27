@@ -61,7 +61,7 @@ SELECT
     f.rate,
     c.customer_name,
     i.item_name
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 WHERE {where_clause}

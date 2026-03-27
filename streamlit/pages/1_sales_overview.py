@@ -75,7 +75,7 @@ SELECT
     SUM(f.amount) AS total_order_amount,
     COUNT(DISTINCT f.sales_order_id) AS total_orders,
     AVG(f.amount) AS avg_order_amount
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 {build_where_clause(date_filter=False)}
@@ -105,7 +105,7 @@ time_query = f"""
 SELECT
     {date_col} AS order_period,
     COUNT(DISTINCT f.sales_order_id) AS total_orders
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 {build_where_clause()}
@@ -128,7 +128,7 @@ st.subheader("🏆 Top Customers")
 
 customer_query = f"""
 SELECT c.customer_name, SUM(f.amount) AS total_value
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 {build_where_clause()}
@@ -149,7 +149,7 @@ st.subheader("📦 Top Items")
 
 item_query = f"""
 SELECT i.item_name, SUM(f.amount) AS total_value
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 {build_where_clause()}
@@ -183,7 +183,7 @@ SELECT
     f.order_date,
     f.amount,
     f.order_status
-FROM main_prod.fact_final_joined_files f
+FROM main_prod.fact_sales_order f
 JOIN main_prod.dim_customer c ON f.customer_name = c.customer_name
 JOIN main_prod.dim_item i ON f.item_code = i.item_code
 {build_where_clause()}

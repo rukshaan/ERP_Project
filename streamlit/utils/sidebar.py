@@ -26,7 +26,7 @@ def render_sidebar():
     min_max_query = """
         SELECT MIN(order_date) AS min_date,
                MAX(delivery_date) AS max_date
-        FROM main_prod.fact_final_joined_files
+        FROM main_prod.fact_sales_order
         WHERE open_qty > 0
     """
     date_range = con.execute(min_max_query).df()
@@ -74,7 +74,7 @@ def render_sidebar():
 
     customers_df = con.execute("""
         SELECT DISTINCT customer_name
-        FROM main_prod.fact_final_joined_files
+        FROM main_prod.fact_sales_order
         WHERE open_qty > 0
         ORDER BY customer_name
     """).df()
@@ -92,7 +92,7 @@ def render_sidebar():
 
     items_df = con.execute("""
         SELECT DISTINCT item_name
-        FROM main_prod.fact_final_joined_files
+        FROM main_prod.fact_sales_order
         WHERE open_qty > 0
         ORDER BY item_name
     """).df()
