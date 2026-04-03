@@ -1,34 +1,30 @@
 {{
     config(
         materialized='incremental',
-        unique_key='sales_invoice_id'
+        
     )
 }}
 
--- -------------------------------------
--- 1. Source
--- -------------------------------------
 WITH source_data AS (
+
     SELECT *
     FROM delta_scan('/opt/airflow/data/Silver/delta/SalesInvoice')
+
 ),
 
--- -------------------------------------
--- 2. Cast timestamps (standardization only)
--- -------------------------------------
 casted AS (
+
     SELECT
         *,
         CAST(creationdate AS TIMESTAMP) AS creation_ts,
         CAST(posting_date AS DATE) AS posting_date_ts,
         CAST(due_date AS DATE) AS due_date_ts
     FROM source_data
+
 ),
 
--- -------------------------------------
--- 3. Deduplicate (latest record per invoice)
--- -------------------------------------
 deduped AS (
+
     SELECT *
     FROM (
         SELECT *,
@@ -41,10 +37,8 @@ deduped AS (
     WHERE rn = 1
 ),
 
--- -------------------------------------
--- 4. Incremental filter
--- -------------------------------------
 filtered AS (
+
     SELECT *
     FROM deduped
 
@@ -54,13 +48,14 @@ filtered AS (
         FROM {{ this }}
     )
     {% endif %}
+
 )
 
--- -------------------------------------
--- 5. Final SELECT (STAGING ONLY - NO FLATTENING)
--- -------------------------------------
 SELECT
-    -- identifiers
+
+    -- =========================
+    -- IDENTIFIERS (UNCHANGED)
+    -- =========================
     sales_invoice_id,
     customer,
     customer_name,
@@ -68,6 +63,16 @@ SELECT
     territory,
     company,
 
+    -- items
+    item_name,
+    item_code,
+
+    item_description,
+    item_rate,
+    item_qty as item_qty,
+    item_amount,
+
+     -- =========================
     -- dates
     posting_date,
     due_date,
@@ -75,7 +80,7 @@ SELECT
     posting_date_ts,
     due_date_ts,
 
-    -- status flags
+    -- status
     is_pos,
     is_return,
     docstatus,
@@ -97,18 +102,13 @@ SELECT
     discount_amount,
     additional_discount_percentage,
 
-    -- addresses
     customer_address,
     shipping_address,
 
     remarks,
 
-    -- 🔥 KEEP FULL JSON STRUCTURES (IMPORTANT)
-    items,
-    payments,
-    payment_schedule,
-    sales_team,
-    taxes,
+    -- payments
+    payment_amount,
 
     -- metadata
     batchid,

@@ -19,7 +19,7 @@ def check_schema():
  
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
  
-    df = spark.read.format("delta").load("/opt/airflow/data/Silver/delta/SalesOrderItems")
+    df = spark.read.format("delta").load("/opt/airflow/data/Silver/delta/SalesInvoice")
     # partitions=df.rdd.getNumPartitions()
     # print("Number of partitions:", partitions)
     # df.show()
@@ -27,6 +27,7 @@ def check_schema():
     # print("Number of rows:", df.count())
     column_count = len(df.schema.fields)
     print("Number of columns:", column_count)
+    df.show()
 
     df.printSchema()
  

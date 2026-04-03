@@ -132,7 +132,7 @@ def transform_customer_to_silver(**kwargs):
         # If it fails due to concurrency, wait and retry
         error_msg = str(e)
         if "DELTA_PROTOCOL_CHANGED" in error_msg or "concurrent" in error_msg.lower():
-            print(f"⚠️  Concurrent write detected, retrying...")
+            print(f" Concurrent write detected, retrying...")
             import time
             time.sleep(2)  # Wait for other writer to finish
             

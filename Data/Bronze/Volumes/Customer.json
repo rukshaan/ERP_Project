@@ -6,7 +6,7 @@
     "modified": "2026-03-23 08:20:25.050260",
     "modified_by": "Administrator",
     "docstatus": 0,
-    "idx": 3270,
+    "idx": 3302,
     "naming_series": "CUST-.YYYY.-",
     "customer_name": "ABC private LTD",
     "customer_type": "Individual",
@@ -45,6 +45,7 @@
         "doctype": "Portal User"
       }
     ],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -65,8 +66,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Abhishek  Kumar2",
@@ -75,7 +75,7 @@
     "modified": "2025-11-14 14:13:41.635764",
     "modified_by": "abishek@sukan.eu",
     "docstatus": 0,
-    "idx": 1396,
+    "idx": 1414,
     "naming_series": "CUST-.YYYY.-",
     "customer_name": "Abhishek  Kumar2",
     "customer_type": "Individual",
@@ -95,7 +95,8 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
+    "accounts": [],
+    "companies": [],
     "portal_users": [
       {
         "name": "3n9iaq3rda",
@@ -112,8 +113,7 @@
         "doctype": "Portal User"
       }
     ],
-    "accounts": [],
-    "companies": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "qfkrb4hei6",
@@ -141,7 +141,7 @@
     "modified": "2026-01-29 11:34:01.951251",
     "modified_by": "abishek@sukan.eu",
     "docstatus": 0,
-    "idx": 986,
+    "idx": 990,
     "naming_series": "CUST-.YYYY.-",
     "customer_name": "Abhishek Kumar",
     "customer_type": "Individual",
@@ -164,10 +164,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Administrator",
@@ -192,7 +192,8 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
+    "accounts": [],
+    "companies": [],
     "portal_users": [
       {
         "name": "mtefn52r6m",
@@ -209,8 +210,7 @@
         "doctype": "Portal User"
       }
     ],
-    "accounts": [],
-    "companies": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -243,10 +243,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Ashish",
@@ -273,10 +273,10 @@
     "disabled": 0,
     "custom_portal_access": 1,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -309,10 +309,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Cportal Company",
@@ -337,7 +337,8 @@
     "disabled": 0,
     "custom_portal_access": 1,
     "doctype": "Customer",
-    "credit_limits": [],
+    "accounts": [],
+    "companies": [],
     "portal_users": [
       {
         "name": "bvvc9jg8ca",
@@ -354,8 +355,7 @@
         "doctype": "Portal User"
       }
     ],
-    "accounts": [],
-    "companies": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "2qeb08hil7",
@@ -420,6 +420,7 @@
         "doctype": "Portal User"
       }
     ],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -440,8 +441,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "dusasan",
@@ -470,10 +470,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -499,10 +499,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Eren Yeager",
@@ -525,6 +525,9 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
+    "accounts": [],
+    "companies": [],
+    "portal_users": [],
     "credit_limits": [
       {
         "name": "uus0gldhjk",
@@ -543,9 +546,6 @@
         "doctype": "Customer Credit Limit"
       }
     ],
-    "portal_users": [],
-    "accounts": [],
-    "companies": [],
     "sales_team": [
       {
         "name": "qeh9t0i5fm",
@@ -598,6 +598,7 @@
     "custom_portal_access": 1,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -618,8 +619,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Falna",
@@ -642,10 +642,10 @@
     "disabled": 0,
     "custom_portal_access": 1,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "53mi7fn3r8",
@@ -695,10 +695,10 @@
     "custom_portal_access": 1,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Guest",
@@ -723,7 +723,8 @@
     "disabled": 0,
     "custom_portal_access": 1,
     "doctype": "Customer",
-    "credit_limits": [],
+    "accounts": [],
+    "companies": [],
     "portal_users": [
       {
         "name": "26sl71quq9",
@@ -740,8 +741,7 @@
         "doctype": "Portal User"
       }
     ],
-    "accounts": [],
-    "companies": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -774,10 +774,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "India Mart",
@@ -802,6 +802,9 @@
     "disabled": 0,
     "custom_portal_access": 1,
     "doctype": "Customer",
+    "accounts": [],
+    "companies": [],
+    "portal_users": [],
     "credit_limits": [
       {
         "name": "omabu3gg1i",
@@ -820,9 +823,6 @@
         "doctype": "Customer Credit Limit"
       }
     ],
-    "portal_users": [],
-    "accounts": [],
-    "companies": [],
     "sales_team": [
       {
         "name": "4n6k2dv2q7",
@@ -874,6 +874,24 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [
+      {
+        "name": "v0gaal6mh8",
+        "owner": "Administrator",
+        "creation": "2025-03-22 09:15:24.986013",
+        "modified": "2025-11-17 09:28:05.332342",
+        "modified_by": "abishek@sukan.eu",
+        "docstatus": 0,
+        "idx": 1,
+        "company": "Fanta Co.",
+        "credit_limit": 10000.0,
+        "bypass_credit_limit_check": 0,
+        "parent": "INDIAN MART GROCERY Ltd",
+        "parentfield": "credit_limits",
+        "parenttype": "Customer",
+        "doctype": "Customer Credit Limit"
+      }
+    ],
     "accounts": [],
     "sales_team": [
       {
@@ -894,25 +912,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": [
-      {
-        "name": "v0gaal6mh8",
-        "owner": "Administrator",
-        "creation": "2025-03-22 09:15:24.986013",
-        "modified": "2025-11-17 09:28:05.332342",
-        "modified_by": "abishek@sukan.eu",
-        "docstatus": 0,
-        "idx": 1,
-        "company": "Fanta Co.",
-        "credit_limit": 10000.0,
-        "bypass_credit_limit_check": 0,
-        "parent": "INDIAN MART GROCERY Ltd",
-        "parentfield": "credit_limits",
-        "parenttype": "Customer",
-        "doctype": "Customer Credit Limit"
-      }
-    ]
+    "companies": []
   },
   {
     "name": "jeyarajah Rukshan",
@@ -939,10 +939,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -973,6 +973,7 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -993,8 +994,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Karis Bazaar B.V.",
@@ -1019,10 +1019,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -1048,10 +1048,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Ken Kaneki",
@@ -1075,6 +1075,9 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
+    "accounts": [],
+    "companies": [],
+    "portal_users": [],
     "credit_limits": [
       {
         "name": "v24jiskuda",
@@ -1093,9 +1096,6 @@
         "doctype": "Customer Credit Limit"
       }
     ],
-    "portal_users": [],
-    "accounts": [],
-    "companies": [],
     "sales_team": [
       {
         "name": "qeotkqb4re",
@@ -1142,10 +1142,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "kishanth_bai - 1",
@@ -1172,10 +1172,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -1204,10 +1204,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "kritika super market",
@@ -1237,10 +1237,10 @@
     "disabled": 0,
     "custom_portal_access": 1,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "q7r3ir2i8o",
@@ -1287,10 +1287,10 @@
     "custom_portal_access": 1,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Local Mandi  Private Ltd.",
@@ -1299,7 +1299,7 @@
     "modified": "2025-06-27 14:45:40.541728",
     "modified_by": "Administrator",
     "docstatus": 0,
-    "idx": 608,
+    "idx": 620,
     "naming_series": "CUST-.YYYY.-",
     "customer_name": "Local Mandi  Private Ltd.",
     "customer_type": "Company",
@@ -1317,10 +1317,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "3e4d72428c",
@@ -1369,10 +1369,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Madam Test",
@@ -1396,10 +1396,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "qe83tpf5g6",
@@ -1443,10 +1443,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "mano001",
@@ -1475,10 +1475,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -1509,10 +1509,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Manoj",
@@ -1535,10 +1535,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -1571,10 +1571,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Nokis Värmdö AB",
@@ -1605,6 +1605,9 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
+    "accounts": [],
+    "companies": [],
+    "portal_users": [],
     "credit_limits": [
       {
         "name": "6aknuekl85",
@@ -1623,9 +1626,6 @@
         "doctype": "Customer Credit Limit"
       }
     ],
-    "portal_users": [],
-    "accounts": [],
-    "companies": [],
     "sales_team": [
       {
         "name": "g8nsgjufip",
@@ -1692,6 +1692,7 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -1713,8 +1714,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Raj pvt. ltd.",
@@ -1744,10 +1744,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "kl5l9ospn8",
@@ -1791,10 +1791,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Robin Bhai",
@@ -1823,10 +1823,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "jevovbgffm",
@@ -1870,10 +1870,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "rrre",
@@ -1899,10 +1899,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -1933,10 +1933,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "rukaa",
@@ -1963,10 +1963,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -1995,6 +1995,7 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -2015,8 +2016,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "rukshan.J",
@@ -2045,10 +2045,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2075,10 +2075,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "rukshan222",
@@ -2105,10 +2105,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2142,10 +2142,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "sangar_bai",
@@ -2170,7 +2170,8 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
+    "accounts": [],
+    "companies": [],
     "portal_users": [
       {
         "name": "602lkj2ntb",
@@ -2187,8 +2188,7 @@
         "doctype": "Portal User"
       }
     ],
-    "accounts": [],
-    "companies": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "4s12fb010t",
@@ -2254,6 +2254,24 @@
         "doctype": "Portal User"
       }
     ],
+    "credit_limits": [
+      {
+        "name": "6a10gt588g",
+        "owner": "abishek@sukan.eu",
+        "creation": "2024-11-01 15:14:58.099562",
+        "modified": "2026-01-22 08:53:37.539071",
+        "modified_by": "abishek@sukan.eu",
+        "docstatus": 0,
+        "idx": 1,
+        "company": "Fanta Co.",
+        "credit_limit": 3416418.06,
+        "bypass_credit_limit_check": 0,
+        "parent": "Saurav Kumar",
+        "parentfield": "credit_limits",
+        "parenttype": "Customer",
+        "doctype": "Customer Credit Limit"
+      }
+    ],
     "accounts": [],
     "sales_team": [
       {
@@ -2274,25 +2292,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": [
-      {
-        "name": "6a10gt588g",
-        "owner": "abishek@sukan.eu",
-        "creation": "2024-11-01 15:14:58.099562",
-        "modified": "2026-01-22 08:53:37.539071",
-        "modified_by": "abishek@sukan.eu",
-        "docstatus": 0,
-        "idx": 1,
-        "company": "Fanta Co.",
-        "credit_limit": 3416418.06,
-        "bypass_credit_limit_check": 0,
-        "parent": "Saurav Kumar",
-        "parentfield": "credit_limits",
-        "parenttype": "Customer",
-        "doctype": "Customer Credit Limit"
-      }
-    ]
+    "companies": []
   },
   {
     "name": "Sensa supermarket",
@@ -2320,10 +2320,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "51fu26i4bf",
@@ -2369,10 +2369,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Tesla",
@@ -2402,10 +2402,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2433,10 +2433,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Test BV Donald2",
@@ -2467,10 +2467,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2503,10 +2503,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Test BV Donald4",
@@ -2536,10 +2536,10 @@
     "disabled": 1,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2565,6 +2565,7 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -2585,8 +2586,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Testing customer internal",
@@ -2611,10 +2611,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2645,10 +2645,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Testing customer internal - 2",
@@ -2679,10 +2679,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2713,10 +2713,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Testing customer internal2",
@@ -2745,10 +2745,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": []
   },
   {
@@ -2773,6 +2773,7 @@
     "custom_portal_access": 1,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -2793,8 +2794,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "TOPICAL&EXCOTICAL FRAM LTD",
@@ -2822,10 +2822,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "37fnsmshv1",
@@ -2876,6 +2876,7 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [
       {
@@ -2896,8 +2897,7 @@
         "doctype": "Sales Team"
       }
     ],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "WORLD MART GROCERY LIMITED",
@@ -2928,10 +2928,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "3bgbfod5jq",
@@ -2982,10 +2982,10 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   },
   {
     "name": "Zukerman Security Ltd.",
@@ -3016,10 +3016,10 @@
     "disabled": 0,
     "custom_portal_access": 0,
     "doctype": "Customer",
-    "credit_limits": [],
-    "portal_users": [],
     "accounts": [],
     "companies": [],
+    "portal_users": [],
+    "credit_limits": [],
     "sales_team": [
       {
         "name": "b4tahhu6hp",
@@ -3064,9 +3064,9 @@
     "custom_portal_access": 0,
     "doctype": "Customer",
     "portal_users": [],
+    "credit_limits": [],
     "accounts": [],
     "sales_team": [],
-    "companies": [],
-    "credit_limits": []
+    "companies": []
   }
 ]

@@ -78,7 +78,8 @@ def get_sales_data_bronze_dag(**kwargs):
     # ----------------------------------------------------------
     today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     api = main.API()
-    doctypes = ["Sales Order", "Customer","Item","Sales Invoice","Quotation"]
+    # doctypes = ["Sales Order", "Customer","Item","Sales Invoice","Quotation"]
+    doctypes = ["Quotation"]
     run_id = kwargs["run_id"]
 
     # Base data folders

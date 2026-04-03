@@ -167,7 +167,6 @@ def render_sidebar():
         con.close()
         logout()
         # 🔒 CLOSE DB (IMPORTANT)
-        con.close()
         return logout()   # 🛑 STOP sidebar execution
 
 

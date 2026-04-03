@@ -27,7 +27,7 @@ with DAG(
     'first_dag',
     default_args=default_args,
     description='Fetch user data from API and store it in DuckDB',
-    schedule='0 * * * *',  # Run hourly
+    schedule="0 2 * * *",
     catchup=False,
     
 ) as dag:
@@ -48,19 +48,6 @@ with DAG(
         reset_dag_run=True
     )
     
-    # # Add this task to your sales_order_bronze_silver DAG
-    # trigger_third_dag = TriggerDagRunOperator(
-    #     task_id='trigger_dbt_transformation_dag',
-    #     trigger_dag_id='dbt_transformation_dag',
-    #     reset_dag_run=True
-    # )
-
-    # Make sure this is at the end of your task dependencies
-    # For example: previous_task >> trigger_third_dag
-        # task_2 = PythonOperator(
-        #     task_id='task_2',
-        #     python_callable=say_hello_2,
-        # )
  
  
     

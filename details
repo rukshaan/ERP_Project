@@ -1,0 +1,9 @@
+User: airflow
+Password: airflow
+Database: airflow
+Host: localhost (if connecting from your computer) or postgres (if connecting from within a Docker container)
+Port: 5432
+The default Admin credentials for the Streamlit dashboard are:
+
+Username: admin
+Password: admin123

@@ -1,7 +1,9 @@
 # utils/auth.py
 import streamlit as st
+import hashlib
 from streamlit_cookies_manager import EncryptedCookieManager
-from utils.erp import Connect
+from utils.db import get_pg_connection
+from utils.init_db import init_auth_tables
 
 # ================= CONFIG =================
 COOKIE_PREFIX = "erp_dashboard"
@@ -22,10 +24,48 @@ def get_cookies():
 
 # ================= SESSION INIT =================
 def init_auth_state():
+    # Ensure database is initialized
+    if "db_initialized" not in st.session_state:
+        init_auth_tables()
+        st.session_state.db_initialized = True
+        
     st.session_state.setdefault("authenticated", False)
     st.session_state.setdefault("user", None)
-    st.session_state.setdefault("erp_conn", None)
+    st.session_state.setdefault("role", None)  # ✅ Added role
 
+
+# ================= AUTH HELPERS =================
+def hash_password(password):
+    return hashlib.sha256(password.strip().encode()).hexdigest()
+
+def verify_credentials(username, password):
+    username = username.strip()
+    password = password.strip()
+    try:
+        conn = get_pg_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT u.password_hash, r.name 
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.username = %s
+        """, (username,))
+        result = cur.fetchone()
+        if result:
+            db_hash, role = result
+            if db_hash == hash_password(password):
+                return True, role
+        return False, None
+    except Exception as e:
+        # Check if it's a connection error or a query error
+        if "Failed to connect to PostgreSQL" in str(e):
+            st.error(f"🔌 Database Connection Error: {str(e)}")
+        else:
+            st.error(f"❌ Database Query Error: {str(e)}")
+        return False, None
+    finally:
+        if 'cur' in locals() and cur: cur.close()
+        if 'conn' in locals() and conn: conn.close()
 
 # ================= LOGIN PAGE =================
 def render_login():
@@ -36,8 +76,8 @@ def render_login():
     st.markdown("Please sign in to access the dashboard")
 
     with st.form("login_form"):
-        username = st.text_input("ERP Username / Email")
-        password = st.text_input("ERP Password", type="password")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
         submitted = st.form_submit_button("Login")
 
     if submitted:
@@ -46,76 +86,55 @@ def render_login():
             return
 
         with st.spinner("Authenticating..."):
-            conn = Connect(username=username, password=password)
+            is_valid, role = verify_credentials(username, password)
 
-        if conn.auth_session:
-            print("Login successful for user:", username)  # Debug log
+        if is_valid:
             st.session_state.authenticated = True
             st.session_state.user = username
-            st.session_state.erp_conn = conn
+            st.session_state.role = role
 
             cookies["authenticated"] = "true"
             cookies["user"] = username
-            cookies["sid"] = conn.auth_session
+            cookies["role"] = role
             cookies.save()
 
             st.success("✅ Login successful")
             st.rerun()
         else:
-            print("Login failed for user:", username)  # Debug log
-            print("Response from ERP:")  # Debug log
-            st.error("❌ Invalid ERP credentials")
+            st.error("❌ Invalid credentials")
 
     # 🔁 AUTO RESTORE LOGIN (ON REFRESH)
     if (
         cookies.get("authenticated") == "true"
         and not st.session_state.authenticated
     ):
-        sid = cookies.get("sid")
         user = cookies.get("user")
+        role = cookies.get("role")
 
-        if sid and user:
+        if user and role:
             st.session_state.authenticated = True
             st.session_state.user = user
-            st.session_state.erp_conn = Connect(session_id=sid)
+            st.session_state.role = role
             st.rerun()
 
 
 # ================= LOGOUT =================
-# utils/auth.py
-
-# utils/auth.py
-
-# utils/auth.py
-
 def logout():
     cookies = get_cookies()
 
-    # 1️⃣ Logout from ERP session (safe)
-    try:
-        if st.session_state.get("erp_conn"):
-            st.session_state.erp_conn.logout()
-    except Exception:
-        pass
-
-    # 2️⃣ Invalidate cookies (VERY IMPORTANT)
+    # Invalidate cookies
     cookies["authenticated"] = ""
     cookies["user"] = ""
-    cookies["sid"] = ""
+    cookies["role"] = ""
     cookies.save()
 
-    # 3️⃣ Clear Streamlit session
+    # Clear Streamlit session
     for key in list(st.session_state.keys()):
         del st.session_state[key]
 
 
-
-
-
 # ================= AUTH GUARD =================
-# utils/auth.py
-
-def require_auth():
+def require_auth(roles=None):
     init_auth_state()
     cookies = get_cookies()
 
@@ -127,16 +146,23 @@ def require_auth():
 
     # ✅ Restore session from cookie
     if not st.session_state.authenticated:
-        sid = cookies.get("sid")
         user = cookies.get("user")
+        role = cookies.get("role")
 
-        if sid and user:
+        if user and role:
             st.session_state.authenticated = True
             st.session_state.user = user
-            st.session_state.erp_conn = Connect(session_id=sid)
-            return
+            st.session_state.role = role
 
     # ❌ Still not authenticated
     if not st.session_state.authenticated:
         render_login()
         st.stop()
+
+    # 👮 Role check
+    if roles:
+        if isinstance(roles, str):
+            roles = [roles]
+        if st.session_state.role not in roles:
+            st.error("🚫 Access Denied: Insufficient Permissions")
+            st.stop()

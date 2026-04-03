@@ -57,7 +57,6 @@ with DAG(
     )
     items_task >> quotation_task >> sales_order_task >> sales_invoice_task >> customer_task >> trigger_third_dag
     
-    # sales_order_task >> trigger_third_dag
     # schema_check = PythonOperator(
     #     task_id="check_schema_files",
     #     python_callable=check_schema,
